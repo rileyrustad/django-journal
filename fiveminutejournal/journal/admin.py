@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Morning
+from .models import Morning, Evening
 
 # from .models import Entry, EntryResponse, Question, QuestionResponse, Goal, GoalResponse
 #
@@ -37,3 +37,4 @@ from .models import Morning
 # admin.site.register(EntryResponse, EntryResponseAdmin)
 
 admin.site.register(Morning)
+admin.site.register(Evening)

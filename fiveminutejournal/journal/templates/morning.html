@@ -5,10 +5,27 @@
     <title>Morning</title>
 </head>
 <body>
+<div>
+{% for goal in goals %}
+    {% if goal.active %}
+        <ul><strong>{{ goal.text }}</strong><br>
+        {% for go in goal.goal_set.all %}<br>
+            <li>{{ go.text }}
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+{% endfor %}
+
+
+<p>Want to <a href="{% url 'journal:goals' %}">add a goal?</a></p>
+</div>
+<div>
 <form action="{% url 'journal:morning' %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ morning_form.as_p }}
     <input type="submit" value="Submit" />
 </form>
+    </div>
 </body>
 </html>

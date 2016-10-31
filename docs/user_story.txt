@@ -1,0 +1,35 @@
+As the journaler this is what I want:
+
+Morning Entry:
+
+
+At the beginning of the week I want to establish a few things:
+
+Weekly goals:
+- Beginning of week is user defined - for me it's Mondays
+- Goals have categories that they fall in
+- Goals are numbered by priority within category
+
+
+- On start of the week days:
+- evaluate on last weeks goals
+- write down new weeks goals
+- if "beginning day is skippped" user will be promted on next session for "Beginning info"
+- if it's been more than one week skipped, give most recent goals, but start it for most immediate start of the week
+
+- On non-start of the week days:
+- I give myself a green, yellow, and red light on how I feel it's going
+
+Upcoming events Countdown:
+- Tells me how many days I have until that important date
+- can create new ones on any day
+- event model has text for name and a date field
+
+Pre-defined 5 minture Questions:
+- for now all charfields, since that's how my journal is now
+    - look to having more options like checkboxes/radio buttons
+- model for each 5 minute question? or different type?
+
+
+Additional Reflection:
+- Text field for extra journalling/reflection

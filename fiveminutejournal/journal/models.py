@@ -12,5 +12,7 @@ class Morning(models.Model):
     great3 = models.CharField('What would make today great?', max_length=100)
     affirm1 = models.CharField('Daily Affirmations, I am...', max_length=100)
     affirm2 = models.CharField('Daily Affirmations, I am...', max_length=100)
+    more = models.TextField('Additional Reflection', default='')
+
     def __str__(self):
-        return self.date
+        return str(self.date)

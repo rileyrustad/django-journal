@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Event</title>
 </head>
 <body>
 <p><a href="{% url 'journal:morning' %}">back</a></p>
-
-<form action="{% url 'journal:goals' %}" method="post">
+<form action="{% url 'journal:events' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
-</form>
 </body>
 </html>

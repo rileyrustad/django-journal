@@ -5,6 +5,7 @@
     <title>Morning</title>
 </head>
 <body>
+    <h2>Weekly Goals</h2>
 <div>
 {% for goal in goals %}
     {% if goal.active %}
@@ -21,6 +22,16 @@
 <p>Want to <a href="{% url 'journal:goals' %}">add a goal?</a></p>
 </div>
 <div>
+    <h2>Important Events</h2>
+    <ul>
+    {% for event in events %}
+            <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}</li>
+    {% endfor %}
+    </ul>
+<p>Want to <a href="{% url 'journal:events' %}">add an event?</a></p>
+</div>
+<div>
+        <h2>Journal</h2>
 <form action="{% url 'journal:morning' %}" method="post">
     {% csrf_token %}
     {{ morning_form.as_p }}

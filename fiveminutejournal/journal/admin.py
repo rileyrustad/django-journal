@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Morning, Evening, Goal, GoalCategory
+from .models import Morning, Evening, Goal, GoalCategory, Event
 
 # from .models import Entry, EntryResponse, Question, QuestionResponse, Goal, GoalResponse
 #
@@ -43,4 +43,5 @@ class GoalCategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Morning)
 admin.site.register(Evening)
+admin.site.register(Event)
 admin.site.register(GoalCategory, GoalCategoryAdmin)

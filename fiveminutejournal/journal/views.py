@@ -1,7 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .forms import MorningForm, EveningForm, GoalForm
-from .models import GoalCategory, Goal
+from django.utils import timezone
+from .forms import MorningForm, EveningForm, GoalForm, EventForm
+from .models import GoalCategory, Goal, Event
+
 
 
 def index(request):
@@ -10,6 +12,8 @@ def index(request):
 
 def morning(request):
     goals = GoalCategory.objects.all()
+    events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
+
     if request.method == 'POST':
         form = MorningForm(request.POST)
         if form.is_valid():
@@ -17,8 +21,12 @@ def morning(request):
             return HttpResponseRedirect('/')
     else:
         morning_form = MorningForm()
-
-    return render(request, 'morning.html', {'morning_form': morning_form, 'goals':goals})
+    context = {
+        'morning_form': morning_form,
+        'goals': goals,
+        'events': events,
+    }
+    return render(request, 'morning.html', context)
 
 
 def evening(request):
@@ -39,10 +47,25 @@ def goals(request):
         if form.is_valid():
             text = form.cleaned_data['new_goal_text']
             category = form.cleaned_data['category']
-            g = Goal(text=text,category=category)
+            g = Goal(text=text, category=category)
             g.save()
             return HttpResponseRedirect('/')
     else:
         form = GoalForm()
 
     return render(request, 'goals.html', {'form': form})
+
+
+def events(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            date = form.cleaned_data['date']
+            e = Event(text=text, date=date)
+            e.save()
+            return HttpResponseRedirect('/')
+    else:
+        form = EventForm()
+
+    return render(request, 'events.html', {'form': form})

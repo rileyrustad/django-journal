@@ -3,7 +3,6 @@ from django.utils import timezone
 from datetime import timedelta
 
 
-
 class Morning(models.Model):
     date = models.DateField(default=timezone.now)
     grateful1 = models.CharField('I am grateful for...', max_length=200)
@@ -36,6 +35,7 @@ class Evening(models.Model):
 class GoalCategory(models.Model):
     text = models.CharField(max_length=200)
     active = models.BooleanField()
+
     def __str__(self):
         return str(self.text)
 
@@ -45,7 +45,18 @@ class Goal(models.Model):
     text = models.CharField(max_length=200)
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(default=timezone.now() + timedelta(days=7))
-    #TODO: Add logic that makes end_date end of week
+
+    # TODO: Add logic that makes end_date end of week
     def __str__(self):
         return str(self.text)
 
+
+class Event(models.Model):
+    text = models.CharField(max_length=200)
+    date = models.DateField()
+
+    def days_left(self):
+        return (self.date - timezone.now().date()).days
+
+    def __str__(self):
+        return self.text

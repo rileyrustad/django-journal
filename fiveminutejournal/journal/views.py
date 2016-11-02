@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from .forms import GoalForm, EventForm, JournalForm
-from .models import GoalCategory, Goal, Event, Answer, Response, Question
+from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 
 
 def index(request):
@@ -18,18 +18,20 @@ def index(request):
 def morning(request):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
     goals = GoalCategory.objects.all()
-    response = Response(journal_type='M',date=timezone.now)
+    response = Response(journal_type='M',date=timezone.now())
     if request.method == 'POST':
         form = JournalForm(1, request.POST)
         if form.is_valid():
-            pass
-            # for input in form.cleaned_data:
-            #     if 'question' in input[0]:
-            #         q = Question.objects.all()[0]#filter(text=form.cleaned_data[input][9:])
-            #         a = Answer(text=form.cleaned_data[input], response=response, question=q)
-            #         a.save()
-            # response.save()
-            return HttpResponseRedirect('/')
+            response.save()
+            for answer in form.cleaned_data:
+                if 'question' in answer:
+                    q = Question.objects.filter(id=answer[0])[0]
+                    a = Answer(text=form.cleaned_data[answer], response=response, question=q)
+                    a.save()
+                if 'additional_answer' in answer:
+                    a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
+                    a.save()
+            return HttpResponseRedirect('/journal/')
     else:
         form = JournalForm(1)
     context = {
@@ -43,11 +45,20 @@ def morning(request):
 def evening(request):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
     goals = GoalCategory.objects.all()
+    response = Response(journal_type='E',date=timezone.now())
     if request.method == 'POST':
         form = JournalForm(2, request.POST)
         if form.is_valid():
-            form.save(True)
-            return HttpResponseRedirect('/')
+            response.save()
+            for answer in form.cleaned_data:
+                if 'question' in answer:
+                    q = Question.objects.filter(id=answer[0])[0]
+                    a = Answer(text=form.cleaned_data[answer], response=response, question=q)
+                    a.save()
+                if 'additional_answer' in answer:
+                    a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
+                    a.save()
+            return HttpResponseRedirect('/journal/')
     else:
         form = JournalForm(2)
     context = {
@@ -55,7 +66,25 @@ def evening(request):
         'events': events,
         'goals': goals,
     }
-    return render(request, 'morning.html', context)
+    return render(request, 'evening.html', context)
+
+
+# def evening(request):
+#     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
+#     goals = GoalCategory.objects.all()
+#     if request.method == 'POST':
+#         form = JournalForm(2, request.POST)
+#         if form.is_valid():
+#             form.save(True)
+#             return HttpResponseRedirect('/')
+#     else:
+#         form = JournalForm(2)
+#     context = {
+#         'form': form,
+#         'events': events,
+#         'goals': goals,
+#     }
+#     return render(request, 'morning.html', context)
 
 
 def goals(request):

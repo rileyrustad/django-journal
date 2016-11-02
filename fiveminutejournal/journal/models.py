@@ -24,6 +24,7 @@ class Question(models.Model):
     text = models.CharField(max_length=200)
     journal = models.ForeignKey(Journal)
     responses_number = models.IntegerField(default=2)
+
     def __str__(self):
         return self.text
 
@@ -83,7 +84,6 @@ class Answer(models.Model):
 
 class AdditionalAnswer(models.Model):
     text = models.TextField()
-    question = models.ForeignKey(Question)
     response = models.ForeignKey(Response)
 
     def __str__(self):

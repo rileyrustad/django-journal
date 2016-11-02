@@ -89,19 +89,19 @@ class AdditionalAnswer(models.Model):
     def __str__(self):
         return self.text
 
-class GoalAnswer(models.Model):
-    GREEN = 'G'
-    YELLOW = 'Y'
-    RED = 'R'
-    GOAL_CHOICES = (
-        (GREEN, 'Green'),
-        (YELLOW, 'Yellow'),
-        (RED, 'Red'),
-    )
-    journal_type = models.CharField(
-        max_length=1,
-        choices=GOAL_CHOICES,
-        default=GREEN)
-
-    goal = models.ForeignKey(Goal)
-    response = models.ForeignKey(Response)
+# class GoalAnswer(models.Model):
+#     GREEN = 'G'
+#     YELLOW = 'Y'
+#     RED = 'R'
+#     GOAL_CHOICES = (
+#         (GREEN, 'Green'),
+#         (YELLOW, 'Yellow'),
+#         (RED, 'Red'),
+#     )
+#     journal_type = models.CharField(
+#         max_length=1,
+#         choices=GOAL_CHOICES,
+#         default=GREEN)
+#
+#     goal = models.ForeignKey(Goal)
+#     response = models.ForeignKey(Response)

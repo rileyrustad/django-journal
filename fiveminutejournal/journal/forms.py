@@ -9,12 +9,14 @@ class JournalForm(forms.Form):
         super(JournalForm, self).__init__(*args, **kwargs)
         for question in j.question_set.all():
             for i in range(question.responses_number):
-                self.fields[question.text + str(i)] = forms.CharField()
+                name = 'question' + question.text + str(i)
+                self.fields[name] = forms.CharField()
                 if i == 0:
-                    self.fields[question.text + str(i)].label = question.text
+                    self.fields[name].label = question.text
                 else:
-                    self.fields[question.text + str(i)].label = ''
+                    self.fields[name].label = ''
         self.fields['additional_answer'] = forms.CharField(widget=forms.Textarea)
+        self.fields['additional_answer'] = 'Additional Answer'
 
 
 class GoalForm(forms.Form):

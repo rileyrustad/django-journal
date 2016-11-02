@@ -1,18 +1,20 @@
 from django import forms
-from .models import GoalCategory
+from .models import GoalCategory, Journal
 from django.contrib.admin.widgets import AdminDateWidget
 
 
-# class MorningForm(forms.ModelForm):
-#     class Meta:
-#         model = Morning
-#         fields = '__all__'
-#
-#
-# class EveningForm(forms.ModelForm):
-#     class Meta:
-#         model = Evening
-#         fields = '__all__'
+class JournalForm(forms.Form):
+    def __init__(self, journal_id, *args, **kwargs):
+        j = Journal.objects.filter(pk=journal_id)[0]
+        super(JournalForm, self).__init__(*args, **kwargs)
+        for question in j.question_set.all():
+            for i in range(question.responses_number):
+                self.fields[question.text + str(i)] = forms.CharField()
+                if i == 0:
+                    self.fields[question.text + str(i)].label = question.text
+                else:
+                    self.fields[question.text + str(i)].label = ''
+        self.fields['additional_answer'] = forms.CharField(widget=forms.Textarea)
 
 
 class GoalForm(forms.Form):
@@ -22,5 +24,5 @@ class GoalForm(forms.Form):
 
 class EventForm(forms.Form):
     text = forms.CharField(label='New Event', max_length=200)
-    date = forms.DateField(label='Event Date (mm/dd/yyyy)8000', widget=AdminDateWidget)
+    date = forms.DateField(label='Event Date (mm/dd/yyyy)', widget=AdminDateWidget)
 

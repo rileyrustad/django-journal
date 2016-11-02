@@ -3,37 +3,29 @@ from django.utils import timezone
 from datetime import timedelta
 
 
-class Entry(models.Model):
+class Journal(models.Model):
     MORNING = 'M'
     EVENING = 'E'
-    ENTRY_TYPE_CHOICES = (
+    JOURNAL_TYPE_CHOICES = (
         (MORNING, 'Morning'),
         (EVENING, 'Evening'),
     )
-    entry_type = models.CharField(
+    journal_type = models.CharField(
         max_length=1,
-        choices=ENTRY_TYPE_CHOICES,
+        choices=JOURNAL_TYPE_CHOICES,
         default=MORNING)
     date = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return str(self.date)+' '+str(self.entry_type)
+        return str(self.date)+' '+str(self.journal_type)
 
 
 class Question(models.Model):
     text = models.CharField(max_length=200)
-    entry = models.ForeignKey(Entry)
+    journal = models.ForeignKey(Journal)
     responses_number = models.IntegerField(default=2)
-
-
-class Response(models.Model):
-    text = models.CharField()
-    question = models.ForeignKey(Question)
-
-
-class AdditionalResponse(models.Model):
-    text = models.TextField()
-    question = models.ForeignKey(Question)
+    def __str__(self):
+        return self.text
 
 
 class GoalCategory(models.Model):
@@ -64,3 +56,52 @@ class Event(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Response(models.Model):
+    MORNING = 'M'
+    EVENING = 'E'
+    JOURNAL_TYPE_CHOICES = (
+        (MORNING, 'Morning'),
+        (EVENING, 'Evening'),
+    )
+    journal_type = models.CharField(
+        max_length=1,
+        choices=JOURNAL_TYPE_CHOICES,
+        default=MORNING)
+    date = models.DateField()
+
+
+class Answer(models.Model):
+    text = models.CharField(max_length=200)
+    question = models.ForeignKey(Question)
+    response = models.ForeignKey(Response)
+
+    def __str__(self):
+        return self.text
+
+
+class AdditionalAnswer(models.Model):
+    text = models.TextField()
+    question = models.ForeignKey(Question)
+    response = models.ForeignKey(Response)
+
+    def __str__(self):
+        return self.text
+
+class GoalAnswer(models.Model):
+    GREEN = 'G'
+    YELLOW = 'Y'
+    RED = 'R'
+    GOAL_CHOICES = (
+        (GREEN, 'Green'),
+        (YELLOW, 'Yellow'),
+        (RED, 'Red'),
+    )
+    journal_type = models.CharField(
+        max_length=1,
+        choices=GOAL_CHOICES,
+        default=GREEN)
+
+    goal = models.ForeignKey(Goal)
+    response = models.ForeignKey(Response)

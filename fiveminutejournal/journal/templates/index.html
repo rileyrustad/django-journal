@@ -3,7 +3,7 @@
 
 {% block home %}{% endblock %}
 {% block journal %}class="active"{% endblock %}
-{% block content%}
+{% block content %}
 {% block goals %}
 
 <div class="container-fluid">
@@ -22,19 +22,30 @@
         </div>
         {% endif %}
         {% endfor %}
-        <p>Want to <a href="{% url 'journal:goals' %}">add a goal?</a></p>
+        <h4 class="text-center">Want to <a href="{% url 'journal:goals' %}">add a goal?</a></h4>
     </div>
     {% endblock %}
     <div class="col-xs-8">
 
         {% block events %}
-        <h4>Would you like to log a <a href="{% url 'journal:morning' %}">morning</a> or an <a
-            href="{% url 'journal:evening' %}">evening</a> entry?</h4>
-        {% endblock %}
+
+        <div>
+            <h2 class="text-center">Important Events</h2>
+            <ul>
+                {% for event in events %}
+                <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}</li>
+                {% endfor %}
+            </ul>
+            <h5 class="text-center">Want to <a href="{% url 'journal:events' %}">add an event?</a></h5>
+        </div>
+
 
         {% block forms %}
+        <h4 class="text-center">Would you like to log a <a href="{% url 'journal:morning' %}">morning</a> or an <a
+                href="{% url 'journal:evening' %}">evening</a> entry?</h4>
         {% endblock %}
     </div>
 
     {% endblock %}
 </div>
+    {% endblock %}

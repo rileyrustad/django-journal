@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Entry, Question, Goal, GoalCategory, Event
+from .models import Journal, Question, Goal, GoalCategory, Event
 
 # from .models import Entry, EntryResponse, Question, QuestionResponse, Goal, GoalResponse
 #
@@ -44,11 +44,11 @@ class QuestionInline(admin.StackedInline):
     model = Question
     extra = 2
 
-class EntryAdmin(admin.ModelAdmin):
+class JournalAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
 
 
-admin.site.register(Entry)
+
 admin.site.register(Event)
 admin.site.register(GoalCategory, GoalCategoryAdmin)
-admin.site.register(Entry, EntryAdmin)
+admin.site.register(Journal, JournalAdmin)

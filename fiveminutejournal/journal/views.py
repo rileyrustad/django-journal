@@ -1,13 +1,17 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import MorningForm, EveningForm, GoalForm, EventForm
+from .forms import GoalForm, EventForm, JournalForm
 from .models import GoalCategory, Goal, Event
 
 
 def index(request):
     goals = GoalCategory.objects.all()
-    context = {'goals': goals}
+    events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
+    context = {
+        'goals': goals,
+        'events':events,
+    }
     return render(request, 'index.html', context)
 
 
@@ -15,14 +19,14 @@ def morning(request):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
     goals = GoalCategory.objects.all()
     if request.method == 'POST':
-        form = MorningForm(request.POST)
+        form = JournalForm(1, request.POST)
         if form.is_valid():
             form.save(True)
             return HttpResponseRedirect('/')
     else:
-        morning_form = MorningForm()
+        form = JournalForm(1)
     context = {
-        'morning_form': morning_form,
+        'form': form,
         'events': events,
         'goals': goals,
     }
@@ -30,15 +34,21 @@ def morning(request):
 
 
 def evening(request):
+    events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
+    goals = GoalCategory.objects.all()
     if request.method == 'POST':
-        form = EveningForm(request.POST)
+        form = JournalForm(2, request.POST)
         if form.is_valid():
             form.save(True)
             return HttpResponseRedirect('/')
     else:
-        form = EveningForm()
-
-    return render(request, 'evening.html', {'form': form})
+        form = JournalForm(2)
+    context = {
+        'form': form,
+        'events': events,
+        'goals': goals,
+    }
+    return render(request, 'morning.html', context)
 
 
 def goals(request):
@@ -49,7 +59,7 @@ def goals(request):
             category = form.cleaned_data['category']
             g = Goal(text=text, category=category)
             g.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/journal/')
     else:
         form = GoalForm()
 
@@ -64,7 +74,7 @@ def events(request):
             date = form.cleaned_data['date']
             e = Event(text=text, date=date)
             e.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/journal/')
     else:
         form = EventForm()
 

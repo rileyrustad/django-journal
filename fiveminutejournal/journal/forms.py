@@ -1,18 +1,18 @@
 from django import forms
-from .models import Morning, Evening, GoalCategory
+from .models import GoalCategory
 from django.contrib.admin.widgets import AdminDateWidget
 
 
-class MorningForm(forms.ModelForm):
-    class Meta:
-        model = Morning
-        fields = '__all__'
-
-
-class EveningForm(forms.ModelForm):
-    class Meta:
-        model = Evening
-        fields = '__all__'
+# class MorningForm(forms.ModelForm):
+#     class Meta:
+#         model = Morning
+#         fields = '__all__'
+#
+#
+# class EveningForm(forms.ModelForm):
+#     class Meta:
+#         model = Evening
+#         fields = '__all__'
 
 
 class GoalForm(forms.Form):

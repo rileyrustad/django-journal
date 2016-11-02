@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-Hello would you like to go to <a href="{% url 'journal:morning' %}">morning</a> or <a href="{% url 'journal:evening' %}">night</a>?
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content%}
+Welcome To Riley's Website
+{% endblock %}

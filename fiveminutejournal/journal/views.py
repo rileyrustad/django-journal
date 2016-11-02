@@ -5,7 +5,6 @@ from .forms import MorningForm, EveningForm, GoalForm, EventForm
 from .models import GoalCategory, Goal, Event
 
 
-
 def index(request):
     return render(request, 'index.html')
 

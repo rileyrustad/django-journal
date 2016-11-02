@@ -1,5 +1,40 @@
 {% extends 'base.html' %}
 
+
+{% block home %}{% endblock %}
+{% block journal %}class="active"{% endblock %}
 {% block content%}
-Hello would you like to go to <a href="{% url 'journal:morning' %}">morning</a> or <a href="{% url 'journal:evening' %}">night</a>
-{% endblock %}
+{% block goals %}
+
+<div class="container-fluid">
+    <h2 class="text-center">Riley's Journal</h2>
+
+    <div class="col-xs-12 col-sm-4">
+        <h4 class="text-center">Weekly Goals</h4>
+        {% for goal in goals %}
+        {% if goal.active %}
+        <div class="well well-sm">
+            <ol class="text-center"><strong>{{ goal.text }}</strong><br>
+                {% for go in goal.goal_set.all %}<br>
+                <li class="text-center">{{ go.text }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        {% endif %}
+        {% endfor %}
+        <p>Want to <a href="{% url 'journal:goals' %}">add a goal?</a></p>
+    </div>
+    {% endblock %}
+    <div class="col-xs-8">
+
+        {% block events %}
+        <h4>Would you like to log a <a href="{% url 'journal:morning' %}">morning</a> or an <a
+            href="{% url 'journal:evening' %}">evening</a> entry?</h4>
+        {% endblock %}
+
+        {% block forms %}
+        {% endblock %}
+    </div>
+
+    {% endblock %}
+</div>

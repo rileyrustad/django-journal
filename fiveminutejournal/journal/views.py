@@ -6,13 +6,14 @@ from .models import GoalCategory, Goal, Event
 
 
 def index(request):
-    return render(request, 'index.html')
+    goals = GoalCategory.objects.all()
+    context = {'goals': goals}
+    return render(request, 'index.html', context)
 
 
 def morning(request):
-    goals = GoalCategory.objects.all()
     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
-
+    goals = GoalCategory.objects.all()
     if request.method == 'POST':
         form = MorningForm(request.POST)
         if form.is_valid():
@@ -22,8 +23,8 @@ def morning(request):
         morning_form = MorningForm()
     context = {
         'morning_form': morning_form,
-        'goals': goals,
         'events': events,
+        'goals': goals,
     }
     return render(request, 'morning.html', context)
 

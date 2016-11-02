@@ -22,5 +22,5 @@ class GoalForm(forms.Form):
 
 class EventForm(forms.Form):
     text = forms.CharField(label='New Event', max_length=200)
-    date = forms.DateField(label='Event Date (mm/dd/yyyy)', widget=AdminDateWidget)
+    date = forms.DateField(label='Event Date (mm/dd/yyyy)8000', widget=AdminDateWidget)
 

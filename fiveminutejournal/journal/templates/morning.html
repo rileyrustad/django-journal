@@ -1,25 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
+{% load bootstrap %}
 
-{% block content%}
-<div class="container">
-    <h2>Weekly Goals</h2>
+{% block events %}
+
 <div>
-{% for goal in goals %}
-    {% if goal.active %}
-        <ul><strong>{{ goal.text }}</strong><br>
-        {% for go in goal.goal_set.all %}<br>
-            <li>{{ go.text }}
-            {% endfor %}
-        </ul>
-
-    {% endif %}
-{% endfor %}
-
-
-<p>Want to <a href="{% url 'journal:goals' %}">add a goal?</a></p>
-</div>
-<div>
-    <h2>Important Events</h2>
+    <h2 class="text-center">Important Events</h2>
     <ul>
     {% for event in events %}
             <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}</li>
@@ -27,13 +12,15 @@
     </ul>
 <p>Want to <a href="{% url 'journal:events' %}">add an event?</a></p>
 </div>
+        {% endblock %}
+    {% block forms %}
 <div>
         <h2>Journal</h2>
 <form action="{% url 'journal:morning' %}" method="post">
     {% csrf_token %}
-    {{ morning_form.as_p }}
+    {{ morning_form|bootstrap }}
     <input type="submit" value="Submit" />
 </form>
     </div>
-    </div>
+
 {% endblock %}

@@ -76,6 +76,8 @@ def entry(request, journal_name):
 
 
 def goals(request):
+    goals = GoalCategory.objects.all()
+    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
     if request.method == 'POST':
         form = GoalForm(request.POST)
         if form.is_valid():
@@ -86,11 +88,18 @@ def goals(request):
             return HttpResponseRedirect('/journal/')
     else:
         form = GoalForm()
-
-    return render(request, 'goals.html', {'form': form})
+    context = {
+        'form': form,
+        'events': events,
+        'goals': goals,
+    }
+    return render(request, 'goals.html', context)
 
 
 def events(request):
+    goals = GoalCategory.objects.all()
+    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
@@ -101,5 +110,9 @@ def events(request):
             return HttpResponseRedirect('/journal/')
     else:
         form = EventForm()
-
-    return render(request, 'events.html', {'form': form})
+    context = {
+        'form': form,
+        'events': events,
+        'goals': goals,
+    }
+    return render(request, 'events.html', context)

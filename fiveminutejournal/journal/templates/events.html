@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Event</title>
-</head>
-<body>
+{% extends 'index.html' %}
+{% load bootstrap %}
+
+
+    {% block forms %}
 <p><a href="{% url 'journal:index' %}">back</a></p>
 <form action="{% url 'journal:events' %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|bootstrap }}
     <input type="submit" value="Submit" />
-</body>
-</html>
+    </form>
+    {% endblock %}

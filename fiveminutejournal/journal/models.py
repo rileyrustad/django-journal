@@ -17,7 +17,7 @@ class Journal(models.Model):
     date = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return str(self.date)+' '+str(self.journal_type)
+        return self.name
 
 
 class Question(models.Model):

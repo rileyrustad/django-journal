@@ -22,7 +22,7 @@
         </div>
         {% endif %}
         {% endfor %}
-        <h4 class="text-center">Want to <a href="{% url 'journal:goals' %}">add a goal?</a></h4>
+        <h5><a href="{% url 'journal:goals' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit a Goal</a></h5>
     </div>
     {% endblock %}
     <div class="col-xs-8">
@@ -36,7 +36,7 @@
                 <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}</li>
                 {% endfor %}
             </ul>
-            <h5 class="text-center">Want to <a href="{% url 'journal:events' %}">add an event?</a></h5>
+            <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit and Event</a></h5>
         </div>
 
 

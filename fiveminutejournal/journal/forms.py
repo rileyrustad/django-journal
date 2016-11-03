@@ -16,7 +16,7 @@ class JournalForm(forms.Form):
                 else:
                     self.fields[name].label = ''
         self.fields['additional_answer'] = forms.CharField(widget=forms.Textarea)
-        self.fields['additional_answer'].label = 'Additional Answer'
+        self.fields['additional_answer'].label = 'Additional Reflection'
 
 
 

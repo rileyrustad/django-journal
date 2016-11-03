@@ -11,10 +11,10 @@ def index(request):
     journals = Journal.objects.all()
     context = {
         'goals': goals,
-        'events':events,
-        'morning':'morning',
-        'evening':'evening',
-        'journals':journals,
+        'events': events,
+        'morning': 'morning',
+        'evening': 'evening',
+        'journals': journals,
     }
     return render(request, 'index.html', context)
 
@@ -32,14 +32,15 @@ def complete(request):
 def entry(request, journal_name):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
     goals = GoalCategory.objects.all()
-    name =''
+    name = ''
+    entry_type_first = False
+    entry_type_middle = False
+    entry_type_last = False
     for journal in Journal.objects.all():
         if journal_name == journal.name:
             response = Response(journal_type=journal, date=timezone.now())
             form = JournalForm(journal.name, request.POST)
-            entry_type_first = False
-            entry_type_middle = False
-            entry_type_last = False
+
             if journal.journal_type == 'F':
                 entry_type_first = True
             elif journal.journal_type == 'M':
@@ -63,16 +64,22 @@ def entry(request, journal_name):
             return HttpResponseRedirect('/journal/entry/complete')
     else:
         form = JournalForm(journal_name=name)
-    context = {
-        'form': form,
-        'events': events,
-        'goals': goals,
-        "entry_type_first" : entry_type_first,
-        "entry_type_middle" : entry_type_middle,
-        "entry_type_last" : entry_type_last,
-        "entry_type_morning": True
-    }
-    return render(request, 'entry.html', context)
+        response_exists = False
+        responses = Response.objects.filter(date=timezone.now().date())
+        if len(responses) > 0:
+            response_exists = True
+        context = {
+            'form': form,
+            'events': events,
+            'goals': goals,
+            'responses': responses,
+            'response_exists': response_exists,
+            "entry_type_first": entry_type_first,
+            "entry_type_middle": entry_type_middle,
+            "entry_type_last": entry_type_last,
+            "entry_type_morning": True
+        }
+        return render(request, 'entry.html', context)
 
 
 def goals(request):

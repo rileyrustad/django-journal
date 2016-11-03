@@ -33,13 +33,31 @@
             <h2 class="text-center">Important Events</h2>
             <ul>
                 {% for event in events %}
-                <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}</li>
+                <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text}}
+                </li>
                 {% endfor %}
             </ul>
-            <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit and Event</a></h5>
+            <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit and
+                Event</a></h5>
         </div>
-
-
+        {% endblock %}
+        <div>
+        {% block entries %}
+        {% if response_exists %}
+        {% for response in responses %}
+            <strong><p>{{response.journal_type}}</p></strong>
+            <ul>
+        {% for answer in response.answer_set.all %}
+        <li>{{answer.question}} {{answer.text}}</li>
+        {% endfor %}
+        {% for answer in response.additionalanswer_set.all %}
+        <li>Additional Reflection: {{answer.text}}</li>
+        {% endfor %}
+                </ul>
+        {% endfor %}
+        {% endif %}
+        {% endblock%}
+        </div>
         {% block forms %}
         <h4 class="text-center">Would you like to log a
             {% for journal in journals %}
@@ -49,6 +67,6 @@
         {% endblock %}
     </div>
 
-    {% endblock %}
+
 </div>
-    {% endblock %}
+{% endblock %}

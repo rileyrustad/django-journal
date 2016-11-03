@@ -71,6 +71,8 @@ class Response(models.Model):
 
 
 class Answer(models.Model):
+    class Meta:
+        ordering = ['question']
     text = models.CharField(max_length=200)
     question = models.ForeignKey(Question)
     response = models.ForeignKey(Response)

@@ -55,7 +55,8 @@ def entry(request, journal_name):
             response.save()
             for answer in form.cleaned_data:
                 if 'question' in answer:
-                    q = Question.objects.filter(id=answer[0])[0]
+                    id = [int(s) for s in answer.split() if s.isdigit()][0]
+                    q = Question.objects.filter(id=id)[0]
                     a = Answer(text=form.cleaned_data[answer], response=response, question=q)
                     a.save()
                 if 'additional_answer' in answer:

@@ -71,6 +71,8 @@ class Response(models.Model):
         choices=JOURNAL_TYPE_CHOICES,
         default=MORNING)
     date = models.DateField()
+    def __str__(self):
+        return str(self.date)+' '+str(self.journal_type)
 
 
 class Answer(models.Model):
@@ -88,6 +90,7 @@ class AdditionalAnswer(models.Model):
 
     def __str__(self):
         return self.text
+
 
 # class GoalAnswer(models.Model):
 #     GREEN = 'G'

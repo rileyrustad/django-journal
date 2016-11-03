@@ -11,62 +11,88 @@ def index(request):
     context = {
         'goals': goals,
         'events':events,
+        'morning':'morning',
+        'evening':'evening',
     }
     return render(request, 'index.html', context)
 
 
-def morning(request):
+def entry(request, entry_type):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
     goals = GoalCategory.objects.all()
-    response = Response(journal_type='M',date=timezone.now())
-    if request.method == 'POST':
-        form = JournalForm(1, request.POST)
-        if form.is_valid():
-            response.save()
-            for answer in form.cleaned_data:
-                if 'question' in answer:
-                    q = Question.objects.filter(id=answer[0])[0]
-                    a = Answer(text=form.cleaned_data[answer], response=response, question=q)
-                    a.save()
-                if 'additional_answer' in answer:
-                    a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
-                    a.save()
-            return HttpResponseRedirect('/journal/')
-    else:
-        form = JournalForm(1)
-    context = {
-        'form': form,
-        'events': events,
-        'goals': goals,
-    }
-    return render(request, 'morning.html', context)
+    if entry_type == 'morning':
+        response = Response(journal_type='M',date=timezone.now())
+        if request.method == 'POST':
+            form = JournalForm(1, request.POST)
+            if form.is_valid():
+                response.save()
+                for answer in form.cleaned_data:
+                    if 'question' in answer:
+                        q = Question.objects.filter(id=answer[0])[0]
+                        a = Answer(text=form.cleaned_data[answer], response=response, question=q)
+                        a.save()
+                    if 'additional_answer' in answer:
+                        a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
+                        a.save()
+                return HttpResponseRedirect('/journal/')
+        else:
+            form = JournalForm(1)
+        context = {
+            'form': form,
+            'events': events,
+            'goals': goals,
+        }
+        return render(request, 'morning.html', context)
+    elif entry_type == 'evening':
+        response = Response(journal_type='E', date=timezone.now())
+        if request.method == 'POST':
+            form = JournalForm(2, request.POST)
+            if form.is_valid():
+                response.save()
+                for answer in form.cleaned_data:
+                    if 'question' in answer:
+                        q = Question.objects.filter(id=answer[0])[0]
+                        a = Answer(text=form.cleaned_data[answer], response=response, question=q)
+                        a.save()
+                    if 'additional_answer' in answer:
+                        a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
+                        a.save()
+                return HttpResponseRedirect('/journal/')
+        else:
+            form = JournalForm(2)
+        context = {
+            'form': form,
+            'events': events,
+            'goals': goals,
+        }
+        return render(request, 'evening.html', context)
 
 
-def evening(request):
-    events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
-    goals = GoalCategory.objects.all()
-    response = Response(journal_type='E',date=timezone.now())
-    if request.method == 'POST':
-        form = JournalForm(2, request.POST)
-        if form.is_valid():
-            response.save()
-            for answer in form.cleaned_data:
-                if 'question' in answer:
-                    q = Question.objects.filter(id=answer[0])[0]
-                    a = Answer(text=form.cleaned_data[answer], response=response, question=q)
-                    a.save()
-                if 'additional_answer' in answer:
-                    a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
-                    a.save()
-            return HttpResponseRedirect('/journal/')
-    else:
-        form = JournalForm(2)
-    context = {
-        'form': form,
-        'events': events,
-        'goals': goals,
-    }
-    return render(request, 'evening.html', context)
+# def evening(request):
+#     events = Event.objects.filter(date__gte=timezone.now()).order_by('-date')
+#     goals = GoalCategory.objects.all()
+#     response = Response(journal_type='E',date=timezone.now())
+#     if request.method == 'POST':
+#         form = JournalForm(2, request.POST)
+#         if form.is_valid():
+#             response.save()
+#             for answer in form.cleaned_data:
+#                 if 'question' in answer:
+#                     q = Question.objects.filter(id=answer[0])[0]
+#                     a = Answer(text=form.cleaned_data[answer], response=response, question=q)
+#                     a.save()
+#                 if 'additional_answer' in answer:
+#                     a = AdditionalAnswer(text=form.cleaned_data[answer], response=response)
+#                     a.save()
+#             return HttpResponseRedirect('/journal/')
+#     else:
+#         form = JournalForm(2)
+#     context = {
+#         'form': form,
+#         'events': events,
+#         'goals': goals,
+#     }
+#     return render(request, 'evening.html', context)
 
 
 # def evening(request):

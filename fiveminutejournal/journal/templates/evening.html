@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Evening</title>
-</head>
-<body>
-<form action="{% url 'journal:evening' %}" method="post">
+{% extends 'index.html' %}
+{% load bootstrap %}
+
+
+    {% block forms %}
+<div>
+        <h2>Journal</h2>
+<form action="{% url 'journal:entry' entry_type='evening' %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|bootstrap }}
     <input type="submit" value="Submit" />
 </form>
-</body>
-</html>
+    </div>
+
+{% endblock %}

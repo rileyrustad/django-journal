@@ -4,8 +4,8 @@ from django.contrib.admin.widgets import AdminDateWidget
 
 
 class JournalForm(forms.Form):
-    def __init__(self, journal_id, *args, **kwargs):
-        j = Journal.objects.filter(pk=journal_id)[0]
+    def __init__(self, journal_name, *args, **kwargs):
+        j = Journal.objects.filter(name=journal_name)[0]
         super(JournalForm, self).__init__(*args, **kwargs)
         for question in j.question_set.all():
             for i in range(question.responses_number):

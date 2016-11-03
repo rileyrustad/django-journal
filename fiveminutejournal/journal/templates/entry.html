@@ -5,10 +5,10 @@
     {% block forms %}
 <div>
         <h2>Journal</h2>
-{% if entry_type_morning %}
-<form action="{% url 'journal:entry' 'morning' %}" method="post">
-    {% elif not entry_type_morning %}
-<form action="{% url 'journal:entry' 'evening' %}" method="post">
+{% if entry_type_first %}
+<form action="{% url 'journal:entry' 'Morning' %}" method="post">
+    {% elif not entry_type_first %}
+<form action="{% url 'journal:entry' 'Evening' %}" method="post">
     {% endif %}
     {% csrf_token %}
     {{ form|bootstrap }}

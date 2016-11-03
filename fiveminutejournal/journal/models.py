@@ -4,17 +4,20 @@ from datetime import timedelta
 
 
 class Journal(models.Model):
-    MORNING = 'M'
-    EVENING = 'E'
+    FIRST = 'F'
+    LAST = 'L'
+    MIDDLE = 'M'
     JOURNAL_TYPE_CHOICES = (
-        (MORNING, 'Morning'),
-        (EVENING, 'Evening'),
+        (FIRST, 'First'),
+        (LAST, 'Last'),
+        (MIDDLE, 'Middle'),
     )
     journal_type = models.CharField(
         max_length=1,
         choices=JOURNAL_TYPE_CHOICES,
-        default=MORNING)
-    date = models.DateField(default=timezone.now)
+        default=MIDDLE,
+    )
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
@@ -60,19 +63,11 @@ class Event(models.Model):
 
 
 class Response(models.Model):
-    MORNING = 'M'
-    EVENING = 'E'
-    JOURNAL_TYPE_CHOICES = (
-        (MORNING, 'Morning'),
-        (EVENING, 'Evening'),
-    )
-    journal_type = models.CharField(
-        max_length=1,
-        choices=JOURNAL_TYPE_CHOICES,
-        default=MORNING)
+    journal_type = models.ForeignKey(Journal)
     date = models.DateField()
+
     def __str__(self):
-        return str(self.date)+' '+str(self.journal_type)
+        return str(self.date) + ' ' + str(self.journal_type)
 
 
 class Answer(models.Model):
@@ -90,7 +85,6 @@ class AdditionalAnswer(models.Model):
 
     def __str__(self):
         return self.text
-
 
 # class GoalAnswer(models.Model):
 #     GREEN = 'G'

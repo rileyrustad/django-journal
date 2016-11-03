@@ -41,8 +41,11 @@
 
 
         {% block forms %}
-        <h4 class="text-center">Would you like to log a <a href="{% url 'journal:entry' entry_type='morning' %}">morning</a> or an <a
-                href="{% url 'journal:entry' entry_type='evening' %}">evening</a> entry?</h4>
+        <h4 class="text-center">Would you like to log a
+            {% for journal in journals %}
+            <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
+            {% endfor %}
+            entry?</h4>
         {% endblock %}
     </div>
 

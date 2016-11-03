@@ -8,13 +8,15 @@ from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Questi
 def index(request):
     goals = GoalCategory.objects.all()
     events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+    journals = Journal.objects.all()
     context = {
         'goals': goals,
         'events':events,
         'morning':'morning',
         'evening':'evening',
+        'journals':journals,
     }
-    return render(request, 'journal.html', context)
+    return render(request, 'index.html', context)
 
 
 def complete(request):
@@ -26,18 +28,26 @@ def complete(request):
     }
     return render(request, 'entry_complete.html', context)
 
-def entry(request, entry_type):
+
+def entry(request, journal_name):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
     goals = GoalCategory.objects.all()
-
-    if entry_type == 'morning':
-        response = Response(journal_type='M', date=timezone.now())
-        form = JournalForm(1, request.POST)
-        entry_type_morning = True
-    elif entry_type == 'evening':
-        response = Response(journal_type='E', date=timezone.now())
-        form = JournalForm(2, request.POST)
-        entry_type_morning = False
+    name =''
+    for journal in Journal.objects.all():
+        if journal_name == journal.name:
+            response = Response(journal_type=journal, date=timezone.now())
+            form = JournalForm(journal.name, request.POST)
+            entry_type_first = False
+            entry_type_middle = False
+            entry_type_last = False
+            if journal.journal_type == 'F':
+                entry_type_first = True
+            elif journal.journal_type == 'M':
+                entry_type_middle = True
+            elif journal.journal_type == 'L':
+                entry_type_last = True
+            name = journal.name
+            continue
 
     if request.method == 'POST':
         if form.is_valid():
@@ -52,12 +62,15 @@ def entry(request, entry_type):
                     a.save()
             return HttpResponseRedirect('/journal/entry/complete')
     else:
-        form = JournalForm(1)
+        form = JournalForm(journal_name=name)
     context = {
         'form': form,
         'events': events,
         'goals': goals,
-        'entry_type_morning':entry_type_morning,
+        "entry_type_first" : entry_type_first,
+        "entry_type_middle" : entry_type_middle,
+        "entry_type_last" : entry_type_last,
+        "entry_type_morning": True
     }
     return render(request, 'entry.html', context)
 

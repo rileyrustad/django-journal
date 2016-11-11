@@ -8,13 +8,24 @@ from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Questi
 def index(request):
     goals = GoalCategory.objects.all()
     events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
-    journals = Journal.objects.all()
+    first_journal = Journal.objects.filter(journal_type='F').exclude(response__date=timezone.now().date())
+    middle_journals = Journal.objects.filter(journal_type='M').exclude(response__date=timezone.now().date())
+    last_journal = Journal.objects.filter(journal_type='L').exclude(response__date=timezone.now().date())
+
+    response_exists = False
+    responses = Response.objects.filter(date=timezone.now().date())
+    if len(responses) > 0:
+        response_exists = True
     context = {
         'goals': goals,
         'events': events,
         'morning': 'morning',
         'evening': 'evening',
-        'journals': journals,
+        'response_exists': response_exists,
+        'responses': responses,
+        'first_journal': first_journal,
+        'middle_journals': middle_journals,
+        'last_journal': last_journal,
     }
     return render(request, 'index.html', context)
 
@@ -78,7 +89,10 @@ def entry(request, journal_name):
             "entry_type_first": entry_type_first,
             "entry_type_middle": entry_type_middle,
             "entry_type_last": entry_type_last,
-            "entry_type_morning": True
+            "entry_type_morning": True,
+            'journal_name':journal_name
+
+
         }
         return render(request, 'entry.html', context)
 

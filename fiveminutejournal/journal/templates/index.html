@@ -37,7 +37,7 @@
                 </li>
                 {% endfor %}
             </ul>
-            <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit and
+            <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit an
                 Event</a></h5>
         </div>
         {% endblock %}
@@ -54,16 +54,33 @@
         {% for answer in response.additionalanswer_set.all %}
         <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
         {% endfor %}
+            <h5><a href="#"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
 
         {% endfor %}
         {% endif %}
+
         {% endblock%}
         </div>
         {% block forms %}
         <h4 class="text-center">Would you like to log a
-            {% for journal in journals %}
+            {% if first_journal %}
+            {% for journal in first_journal %}
             <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
             {% endfor %}
+            {% endif %}
+
+            {% if middle_journals %}
+            {% for journal in middle_journals %}
+            <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
+            {% endfor %}
+            {% endif %}
+
+            {% if last_journal %}
+            {% for journal in last_journal %}
+            <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
+            {% endfor %}
+            {% endif %}
+
             entry?</h4>
         {% endblock %}
     </div>

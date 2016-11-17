@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.models import User
 
 
 class Journal(models.Model):
@@ -18,6 +19,7 @@ class Journal(models.Model):
         default=MIDDLE,
     )
     name = models.CharField(max_length=50, unique=True)
+    user = models.ForeignKey(User)
 
     def __str__(self):
         return self.name
@@ -65,6 +67,7 @@ class Event(models.Model):
 class Response(models.Model):
     journal_type = models.ForeignKey(Journal)
     date = models.DateField()
+    user = models.ForeignKey(User)
 
     def __str__(self):
         return str(self.date) + ' ' + str(self.journal_type)

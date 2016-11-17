@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^journal/', include('journal.urls', namespace = 'journal')),
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include('allauth.urls')),
 ]

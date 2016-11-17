@@ -4,10 +4,10 @@
 {% block home %}{% endblock %}
 {% block journal %}class="active"{% endblock %}
 {% block content %}
+{% if user.is_authenticated %}
 {% block goals %}
-
 <div class="container-fluid">
-    <h2 class="text-center">Riley's Journal</h2>
+    <h2 class="text-center">{{ user.username }}'s Journal</h2>
 
     <div class="col-xs-12 col-sm-4">
         <h4 class="text-center">Weekly Goals</h4>
@@ -87,4 +87,7 @@
 
 
 </div>
+{% else %}
+<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log in</a> to make an entry?</p>
+{% endif %}
 {% endblock %}

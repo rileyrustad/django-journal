@@ -29,8 +29,13 @@
         <!--<li><a href="#">Page 3</a></li>-->
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+        <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+        {% else %}
+        <li><a href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="{% url 'account_login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>

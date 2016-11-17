@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from local_settings import secret_key
+from local_settings import from_email, secret_key, email_password
 SECRET_KEY = secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -38,10 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'journal',
     'bootstrap3',
     'bootstrapform',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.facebook',
 ]
+
+SITE_ID = 2
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,10 +77,16 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 WSGI_APPLICATION = 'fiveminutejournal.wsgi.application'
 
@@ -126,3 +141,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TIME_ZONE = 'America/Los_Angeles'
+
+ACCOUNT_UNIQUE_EMAIL = True
+
+LOGIN_REDIRECT_URL = "/journal/"
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER= from_email
+EMAIL_HOST_PASSWORD = email_password
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = from_email
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'

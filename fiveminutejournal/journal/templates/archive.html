@@ -7,28 +7,41 @@
 {% if user.is_authenticated %}
 <div class="container-fluid">
     <h2 class="text-center">{{ user.username }}'s Archive</h2>
-<h4 class="text-center">Entries from the last:</h4>
+    <h4 class="text-center">Entries from the last:</h4>
     <ul>
-        <a href="#"><p class="text-center">Week</p></a>
-        <a href="#"><p class="text-center">Month</p></a>
-        <a href="#"><p class="text-center">Year</p></a>
+        <a href="{% url 'journal:archive' week %}"><p class="text-center">Week</p></a>
+        <a href="{% url 'journal:archive' month %}"><p class="text-center">Month</p></a>
+        <a href="#{% url 'journal:archive' year %}><p class="text-center">Year</p></a>
         <p class="text-center">Specific Date Range:</p>
     </ul>
-        <form>
-  <div class="form-group">
-    <label>Start Date:</label>
-    <input type="date" class="form-control" id="start">
-  </div>
-  <div class="form-group">
-    <label>End Date:</label>
-    <input type="date" class="form-control" id="end">
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+    <form>
+        <div class="form-group">
+            <label>Start Date:</label>
+            <input type="date" class="form-control" id="start">
+        </div>
+        <div class="form-group">
+            <label>End Date:</label>
+            <input type="date" class="form-control" id="end">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    {% for response in responses %}
+            <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>
+            <ul>
+        {% for answer in response.answer_set.all %}
+        <li><strong>{{answer.question}}</strong> {{answer.text}}</li>
+        {% endfor %}
+                </ul>
+        {% for answer in response.additionalanswer_set.all %}
+        <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
+        {% endfor %}
+            <h5><a href="#"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
 
+        {% endfor %}
 </div>
 
 {% else %}
-<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log in</a> to make an entry?</p>
+<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log
+    in</a> to make an entry?</p>
 {% endif %}
 {% endblock %}

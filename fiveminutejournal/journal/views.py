@@ -4,6 +4,7 @@ from django.utils import timezone
 from .forms import GoalForm, EventForm, JournalForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 def index(request):
@@ -148,8 +149,25 @@ def events(request):
     }
     return render(request, 'events.html', context)
 
+
 def archive(request, date):
+    now = timezone.now().date()
+    week = now - timezone.timedelta(days=7)
+    month = now - timezone.timedelta(days=31)
+    year = now - timezone.timedelta(days=365)
+
+    context = {
+        'week': str(week),
+        'month': str(month),
+        'year': str(year),
+    }
     if date == 'home':
-        context = {}
         return render(request, 'archive.html', context)
+    else:
+        date = datetime.strptime(date, '%Y-%m-%d')
+        responses = User.objects.filter(pk=request.user.id).response_set.filter(date__gte=date)
+        context['responses'] = responses
+        return render(request, 'archive.html', context)
+
+
 

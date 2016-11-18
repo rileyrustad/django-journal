@@ -7,14 +7,22 @@ from django.contrib.auth.models import User
 
 
 def index(request):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
-    first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.now().date())
-    middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.now().date())
-    last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.now().date())
-
+    goals = []
+    events = []
+    first_journal = []
+    middle_journals = []
+    last_journal = []
     response_exists = False
-    responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.now().date())
+    responses = []
+
+    if request.user.is_authenticated:
+        goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+        events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
+        first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.now().date())
+        middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.now().date())
+        last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.now().date())
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.now().date())
+
     if len(responses) > 0:
         response_exists = True
     context = {

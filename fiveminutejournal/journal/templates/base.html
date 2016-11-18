@@ -25,7 +25,17 @@
       <ul class="nav navbar-nav">
         <li {% block home %} class="active{% endblock %}"><a href="{% url 'home' %}">Home</a></li>
         <li {% block blog %}{% endblock %}><a href="#">Blog</a></li>
-        <li {% block journal %}{% endblock %}><a href="{% url 'journal:index' %}">Journal</a></li>
+        <li {% block journal %}{% endblock %} class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'journal:index' %}">Journal <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url 'journal:index' %}">Make Entry</a></li>
+            <li><a href="#">Archive</a></li>
+            <li><a href="#">Settings</a></li>
+          </ul>
+
+
+        </li>
         <!--<li><a href="#">Page 3</a></li>-->
       </ul>
       <ul class="nav navbar-nav navbar-right">

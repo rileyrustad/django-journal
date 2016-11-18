@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 
 
 def index(request):
-    goals = GoalCategory.objects.all()
-    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
     first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.now().date())
     middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.now().date())
     last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.now().date())
@@ -32,8 +32,8 @@ def index(request):
 
 
 def complete(request):
-    goals = GoalCategory.objects.all()
-    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
     context = {
         'goals': goals,
         'events': events,
@@ -42,8 +42,8 @@ def complete(request):
 
 
 def entry(request, journal_name):
-    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
-    goals = GoalCategory.objects.all()
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
     name = ''
     entry_type_first = False
     entry_type_middle = False
@@ -99,8 +99,8 @@ def entry(request, journal_name):
 
 
 def goals(request):
-    goals = GoalCategory.objects.all()
-    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
     if request.method == 'POST':
         form = GoalForm(request.POST)
         if form.is_valid():
@@ -120,8 +120,8 @@ def goals(request):
 
 
 def events(request):
-    goals = GoalCategory.objects.all()
-    events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
 
     if request.method == 'POST':
         form = EventForm(request.POST)

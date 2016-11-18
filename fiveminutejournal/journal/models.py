@@ -37,6 +37,8 @@ class Question(models.Model):
 class GoalCategory(models.Model):
     text = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
+    user = models.ForeignKey(User)
+
 
     def __str__(self):
         return str(self.text)
@@ -56,6 +58,8 @@ class Goal(models.Model):
 class Event(models.Model):
     text = models.CharField(max_length=200)
     date = models.DateField()
+    user = models.ForeignKey(User)
+
 
     def days_left(self):
         return (self.date - timezone.now().date()).days

@@ -147,3 +147,9 @@ def events(request):
         'goals': goals,
     }
     return render(request, 'events.html', context)
+
+def archive(request, date):
+    if date == 'home':
+        context = {}
+        return render(request, 'archive.html', context)
+

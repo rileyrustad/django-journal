@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block home %}{% endblock %}
+{% block journal %}class="active"{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container-fluid">
+    <h2 class="text-center">{{ user.username }}'s Archive</h2>
+<h4 class="text-center">Entries from the last:</h4>
+    <ul>
+        <a href="#"><p class="text-center">Week</p></a>
+        <a href="#"><p class="text-center">Month</p></a>
+        <a href="#"><p class="text-center">Year</p></a>
+        <p class="text-center">Specific Date Range:</p>
+    </ul>
+        <form>
+  <div class="form-group">
+    <label>Start Date:</label>
+    <input type="date" class="form-control" id="start">
+  </div>
+  <div class="form-group">
+    <label>End Date:</label>
+    <input type="date" class="form-control" id="end">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+</div>
+
+{% else %}
+<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log in</a> to make an entry?</p>
+{% endif %}
+{% endblock %}

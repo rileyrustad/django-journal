@@ -3,17 +3,18 @@ from django.shortcuts import render
 from django.utils import timezone
 from .forms import GoalForm, EventForm, JournalForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
+from django.contrib.auth.models import User
 
 
 def index(request):
     goals = GoalCategory.objects.all()
     events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
-    first_journal = Journal.objects.filter(journal_type='F').exclude(response__date=timezone.now().date())
-    middle_journals = Journal.objects.filter(journal_type='M').exclude(response__date=timezone.now().date())
-    last_journal = Journal.objects.filter(journal_type='L').exclude(response__date=timezone.now().date())
+    first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.now().date())
+    middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.now().date())
+    last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.now().date())
 
     response_exists = False
-    responses = Response.objects.filter(date=timezone.now().date())
+    responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.now().date())
     if len(responses) > 0:
         response_exists = True
     context = {
@@ -49,7 +50,7 @@ def entry(request, journal_name):
     entry_type_last = False
     for journal in Journal.objects.all():
         if journal_name == journal.name:
-            response = Response(journal_type=journal, date=timezone.now())
+            response = Response(journal_type=journal, date=timezone.now(), user=request.user)
             form = JournalForm(journal.name, request.POST)
 
             if journal.journal_type == 'F':

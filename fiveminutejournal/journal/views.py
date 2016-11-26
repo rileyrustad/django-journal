@@ -152,20 +152,20 @@ def events(request):
 
 def archive(request, date):
     now = timezone.now().date()
-    week = now - timezone.timedelta(days=7)
-    month = now - timezone.timedelta(days=31)
-    year = now - timezone.timedelta(days=365)
+    week = str(now - timezone.timedelta(days=7))
+    month = str(now - timezone.timedelta(days=31))
+    year = str(now - timezone.timedelta(days=365))
 
     context = {
-        'week': str(week),
-        'month': str(month),
-        'year': str(year),
+        'week': week,
+        'month': month,
+        'year': year,
     }
     if date == 'home':
         return render(request, 'archive.html', context)
     else:
-        date = datetime.strptime(date, '%Y-%m-%d')
-        responses = User.objects.filter(pk=request.user.id).response_set.filter(date__gte=date)
+        date = datetime.strptime(date, '%Y-%m-%d').date()
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=date)
         context['responses'] = responses
         return render(request, 'archive.html', context)
 

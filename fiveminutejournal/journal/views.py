@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, JournalForm
+from .forms import GoalForm, EventForm, JournalForm, ArchiveForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -150,22 +150,36 @@ def events(request):
     return render(request, 'events.html', context)
 
 
-def archive(request, date):
+def archive(request, start_date):
     now = timezone.now().date()
     week = str(now - timezone.timedelta(days=7))
     month = str(now - timezone.timedelta(days=31))
     year = str(now - timezone.timedelta(days=365))
 
     context = {
+        'now': now,
         'week': week,
         'month': month,
         'year': year,
     }
-    if date == 'home':
+    if request.method == 'POST':
+        form = ArchiveForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=start_date, date__lte=end_date)
+            context['responses'] = responses
+            return render(request, 'archive.html', context)
+    else:
+        form = ArchiveForm()
+        context['form']=form
+
+
+    if start_date == 'home':
         return render(request, 'archive.html', context)
     else:
-        date = datetime.strptime(date, '%Y-%m-%d').date()
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=date)
+        start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=start_date)
         context['responses'] = responses
         return render(request, 'archive.html', context)
 

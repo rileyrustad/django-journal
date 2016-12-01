@@ -19,6 +19,11 @@ class JournalForm(forms.Form):
         self.fields['additional_answer'].label = 'Additional Reflection'
 
 
+class ArchiveForm(forms.Form):
+    start_date = forms.DateField(label='Start Date:')
+    end_date = forms.DateField(label='End Date:')
+
+
 class GoalForm(forms.Form):
     new_goal_text = forms.CharField(label='New Goal', max_length=200)
     category = forms.ModelChoiceField(queryset=GoalCategory.objects.all())

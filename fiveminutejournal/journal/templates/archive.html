@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap %}
 
 
 {% block home %}{% endblock %}
@@ -12,19 +13,8 @@
         <a href="{% url 'journal:archive' week %}"><p class="text-center">Week</p></a>
         <a href="{% url 'journal:archive' month %}"><p class="text-center">Month</p></a>
         <a href="{% url 'journal:archive' year %}"><p class="text-center">Year</p></a>
-        <p class="text-center">Specific Date Range:</p>
+        <a href="{% url 'journal:archive' all %}"><p class="text-center">All</p></a>
     </ul>
-    <form>
-        <div class="form-group">
-            <label>Start Date:</label>
-            <input type="date" class="form-control" id="start">
-        </div>
-        <div class="form-group">
-            <label>End Date:</label>
-            <input type="date" class="form-control" id="end">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
     {% for response in responses %}
             <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>
             <ul>

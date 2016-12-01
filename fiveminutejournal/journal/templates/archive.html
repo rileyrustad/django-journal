@@ -13,7 +13,7 @@
         <a href="{% url 'journal:archive' week %}"><p class="text-center">Week</p></a>
         <a href="{% url 'journal:archive' month %}"><p class="text-center">Month</p></a>
         <a href="{% url 'journal:archive' year %}"><p class="text-center">Year</p></a>
-        <a href="{% url 'journal:archive' all %}"><p class="text-center">All</p></a>
+        <a href="{% url 'journal:archive' 'all' %}"><p class="text-center">All</p></a>
     </ul>
     {% for response in responses %}
             <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>

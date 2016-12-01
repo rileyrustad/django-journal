@@ -162,20 +162,12 @@ def archive(request, start_date):
         'month': month,
         'year': year,
     }
-    if request.method == 'POST':
-        form = ArchiveForm(request.POST)
-        if form.is_valid():
-            start_date = form.cleaned_data['start_date']
-            end_date = form.cleaned_data['end_date']
-            responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=start_date, date__lte=end_date)
-            context['responses'] = responses
-            return render(request, 'archive.html', context)
-    else:
-        form = ArchiveForm()
-        context['form']=form
-
 
     if start_date == 'home':
+        return render(request, 'archive.html', context)
+    elif start_date == 'all':
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.all()
+        context['responses'] = responses
         return render(request, 'archive.html', context)
     else:
         start_date = datetime.strptime(start_date, '%Y-%m-%d').date()

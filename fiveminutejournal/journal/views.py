@@ -18,11 +18,11 @@ def index(request):
 
     if request.user.is_authenticated:
         goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-        events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
-        first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.now().date())
-        middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.now().date())
-        last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.now().date())
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.now().date())
+        events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.datetime.now()).order_by('date')
+        first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.datetime.now().date())
+        middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.datetime.now().date())
+        last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.datetime.now().date())
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.datetime.now().date())
 
     if len(responses) > 0:
         response_exists = True
@@ -166,12 +166,12 @@ def archive(request, start_date):
     if start_date == 'home':
         return render(request, 'archive.html', context)
     elif start_date == 'all':
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.all()
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.all().order_by('-date')
         context['responses'] = responses
         return render(request, 'archive.html', context)
     else:
         start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=start_date)
+        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=start_date).order_by('-date')
         context['responses'] = responses
         return render(request, 'archive.html', context)
 

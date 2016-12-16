@@ -137,3 +137,5 @@ db.sqlite3
 journal-env
 
 shell_script.py
+../.DS_Store
+.DS_Store

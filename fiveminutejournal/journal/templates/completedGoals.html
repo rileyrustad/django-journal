@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+{% load bootstrap %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="text-center">Check Completed Goals</h1>
+
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <form action="{% url 'journal:completed_goals' %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit"/>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

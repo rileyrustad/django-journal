@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, JournalForm, ArchiveForm
+from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -176,4 +176,27 @@ def archive(request, start_date):
         return render(request, 'archive.html', context)
 
 
+def completed_goals(request):
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+
+    if request.method == 'POST':
+        form = CompletedGoalForm(journal_user=request.user, data=request.POST)
+        if form.is_valid():
+            for answer in form.cleaned_data:
+                if form.cleaned_data[answer]:
+                    goal = Goal.objects.filter(id=int(answer))[0]
+                    goal.active = False
+                    goal.save()
+            return HttpResponseRedirect('/journal/entry/complete')
+
+        else:
+            return HttpResponseRedirect('/')
+    else:
+        form = CompletedGoalForm(journal_user=request.user)
+
+    context = {
+        'goals': goals,
+        'form': form,
+    }
+    return render(request, 'completedGoals.html', context)
 

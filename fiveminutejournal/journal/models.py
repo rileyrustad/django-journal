@@ -47,10 +47,8 @@ class GoalCategory(models.Model):
 class Goal(models.Model):
     category = models.ForeignKey(GoalCategory)
     text = models.CharField(max_length=200)
-    start_date = models.DateField(default=timezone.now)
-    end_date = models.DateField(default=timezone.now() + timedelta(days=7))
+    active = models.BooleanField(default=True)
 
-    # TODO: Add logic that makes end_date end of week
     def __str__(self):
         return str(self.text)
 

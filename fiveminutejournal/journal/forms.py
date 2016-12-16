@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import GoalCategory, Journal
 from django.contrib.admin.widgets import AdminDateWidget
 
@@ -32,3 +33,15 @@ class GoalForm(forms.Form):
 class EventForm(forms.Form):
     text = forms.CharField(label='New Event', max_length=200)
     date = forms.DateField(label='Event Date (mm/dd/yyyy)', widget=AdminDateWidget)
+
+
+class CompletedGoalForm(forms.Form):
+    def __init__(self, journal_user, *args, **kwargs):
+        goal_cats = journal_user.goalcategory_set.all()
+        super(CompletedGoalForm, self).__init__(*args, **kwargs)
+        for goal_cat in goal_cats:
+            for goal in goal_cat.goal_set.all():
+                if goal.active == True:
+                    self.fields[str(goal.id)] = forms.BooleanField()
+                    self.fields[str(goal.id)].label = goal.text
+                    self.fields[str(goal.id)].required = False

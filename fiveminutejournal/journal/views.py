@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm
+from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -187,7 +187,7 @@ def completed_goals(request):
                     goal = Goal.objects.filter(id=int(answer))[0]
                     goal.active = False
                     goal.save()
-            return HttpResponseRedirect('/journal/entry/complete')
+            return HttpResponseRedirect('/journal/')
 
         else:
             return HttpResponseRedirect('/')
@@ -200,3 +200,27 @@ def completed_goals(request):
     }
     return render(request, 'completedGoals.html', context)
 
+
+def deleted_goals(request):
+    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+
+    if request.method == 'POST':
+        form = DeletedGoalForm(journal_user=request.user, data=request.POST)
+        if form.is_valid():
+            for answer in form.cleaned_data:
+                if form.cleaned_data[answer]:
+                    goal = Goal.objects.filter(id=int(answer))[0]
+                    goal.active = True
+                    goal.save()
+            return HttpResponseRedirect('/journal/goals')
+
+        else:
+            return HttpResponseRedirect('/journal/archive/')
+    else:
+        form = DeletedGoalForm(journal_user=request.user)
+
+    context = {
+        'goals': goals,
+        'form': form,
+    }
+    return render(request, 'deletedGoals.html', context)

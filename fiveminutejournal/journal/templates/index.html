@@ -8,7 +8,13 @@
 {% block goals %}
 <div class="container-fluid">
     <h2 class="text-center">{{ user.username }}'s Journal</h2>
-
+    {% if not weekly_goals %}
+    <div class="alert alert-warning alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <p class="text-center"><strong>It's a new Week!</strong> Want to <a href="{% url 'journal:completed_goals' %}">
+            set new goals</a>?</p>
+    </div>
+    {% endif %}
     <div class="col-xs-12 col-sm-4">
         <h4 class="text-center">Weekly Goals</h4>
         <p class="text-center"><a href="{% url 'journal:completed_goals' %}">Change your goals</a></p>
@@ -45,24 +51,24 @@
         </div>
         {% endblock %}
         <div>
-        {% block entries %}
-        {% if response_exists %}
-        {% for response in responses %}
+            {% block entries %}
+            {% if response_exists %}
+            {% for response in responses %}
             <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>
             <ul>
-        {% for answer in response.answer_set.all %}
-        <li><strong>{{answer.question}}</strong> {{answer.text}}</li>
-        {% endfor %}
-                </ul>
-        {% for answer in response.additionalanswer_set.all %}
-        <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
-        {% endfor %}
+                {% for answer in response.answer_set.all %}
+                <li><strong>{{answer.question}}</strong> {{answer.text}}</li>
+                {% endfor %}
+            </ul>
+            {% for answer in response.additionalanswer_set.all %}
+            <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
+            {% endfor %}
             <h5><a href="#"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
 
-        {% endfor %}
-        {% endif %}
+            {% endfor %}
+            {% endif %}
 
-        {% endblock%}
+            {% endblock%}
         </div>
         {% block forms %}
         <h4 class="text-center">Would you like to log a
@@ -91,6 +97,7 @@
 
 </div>
 {% else %}
-<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log in</a> to make an entry?</p>
+<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log
+    in</a> to make an entry?</p>
 {% endif %}
 {% endblock %}

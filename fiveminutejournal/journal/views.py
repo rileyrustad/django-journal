@@ -23,6 +23,8 @@ def index(request):
         middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.datetime.now().date())
         last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.datetime.now().date())
         responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.datetime.now().date())
+        today = timezone.now()
+        week_responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=timezone.now() - timezone.timedelta(days=today.weekday()))
 
     if len(responses) > 0:
         response_exists = True
@@ -36,6 +38,7 @@ def index(request):
         'first_journal': first_journal,
         'middle_journals': middle_journals,
         'last_journal': last_journal,
+        'week_responses': week_responses,
     }
     return render(request, 'index.html', context)
 

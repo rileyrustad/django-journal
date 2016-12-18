@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^events/', views.events, name='events'),
     url(r'^completed_goals/', views.completed_goals, name='completed_goals'),
     url(r'^deleted_goals/', views.deleted_goals, name='deleted_goals'),
+    url(r'^edit_entry/(?P<response_id>[0-9]+)/$', views.edit_entry, name='edit_entry'),
 ]

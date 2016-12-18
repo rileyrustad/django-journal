@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm
+from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -215,10 +215,7 @@ def deleted_goals(request):
                     goal = Goal.objects.filter(id=int(answer))[0]
                     goal.active = True
                     goal.save()
-            return HttpResponseRedirect('/journal/goals')
-
-        else:
-            return HttpResponseRedirect('/journal/archive/')
+            return HttpResponseRedirect('/journal/')
     else:
         form = DeletedGoalForm(journal_user=request.user)
 
@@ -227,3 +224,29 @@ def deleted_goals(request):
         'form': form,
     }
     return render(request, 'deletedGoals.html', context)
+
+def edit_entry(request, response_id):
+    response = Response.objects.filter(pk=response_id)[0]
+    if request.method == 'POST':
+        form = EditEntryForm(response_id=response_id, data=request.POST)
+        if form.is_valid():
+            for answer in form.cleaned_data:
+                if answer == 'additional_answer':
+                    additional_answer = response.additionalanswer_set.all()[0]
+                    additional_answer.text = form.cleaned_data[answer]
+                    additional_answer.save()
+                else:
+                    revised_answer = Answer.objects.filter(pk=int(answer))[0]
+                    revised_answer.text = form.cleaned_data[answer]
+                    revised_answer.save()
+
+
+            return HttpResponseRedirect('/journal/')
+
+    else:
+        form = EditEntryForm(response_id=response_id)
+    context = {
+        'response': response,
+        'form': form,
+    }
+    return render(request, 'editEntry.html', context)

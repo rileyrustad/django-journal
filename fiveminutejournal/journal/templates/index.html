@@ -63,7 +63,7 @@
             {% for answer in response.additionalanswer_set.all %}
             <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
             {% endfor %}
-            <h5><a href="#"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
+            <h5><a href="{% url 'journal:edit_entry' response.id %}"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
 
             {% endfor %}
             {% endif %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import GoalCategory, Journal
+from .models import GoalCategory, Journal, Response
 from django.contrib.admin.widgets import AdminDateWidget
 
 
@@ -56,3 +56,19 @@ class DeletedGoalForm(forms.Form):
                     self.fields[str(goal.id)] = forms.BooleanField()
                     self.fields[str(goal.id)].label = goal.text
                     self.fields[str(goal.id)].required = False
+
+class EditEntryForm(forms.Form):
+    def __init__(self, response_id, *args, **kwargs):
+        response = Response.objects.filter(pk=response_id)[0]
+        super(EditEntryForm, self).__init__(*args, **kwargs)
+        answers = response.answer_set.all()
+        additional_answer = response.additionalanswer_set.all()[0]
+
+        for answer in answers:
+            self.fields[str(answer.id)] = forms.CharField()
+            self.fields[str(answer.id)].label = answer.question
+            self.fields[str(answer.id)].initial = answer.text
+
+        self.fields['additional_answer'] = forms.CharField(widget=forms.Textarea)
+        self.fields['additional_answer'].label = 'Additional Reflection'
+        self.fields['additional_answer'].initial = additional_answer.text

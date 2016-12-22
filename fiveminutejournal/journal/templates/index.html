@@ -8,7 +8,7 @@
 {% block goals %}
 <div class="container-fluid">
     <h2 class="text-center">{{ user.username }}'s Journal</h2>
-    {% if not weekly_goals %}
+    {% if not week_responses %}
     <div class="alert alert-warning alert-dismissible fade in">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <p class="text-center"><strong>It's a new Week!</strong> Want to <a href="{% url 'journal:completed_goals' %}">

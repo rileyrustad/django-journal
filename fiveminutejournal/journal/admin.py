@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AdditionalAnswer, Journal, Question, Goal, GoalCategory, Event, Answer, Response
+from .models import AdditionalAnswer, Journal, Question, Goal, GoalCategory, Event, Answer, Response, JournalSettings
 
 
 # from .models import Entry, EntryResponse, Question, QuestionResponse, Goal, GoalResponse
@@ -69,6 +69,7 @@ class ResponseAdmin(admin.ModelAdmin):
 
 admin.site.register(Event)
 admin.site.register(Answer)
+admin.site.register(JournalSettings)
 admin.site.register(GoalCategory, GoalCategoryAdmin)
 admin.site.register(Journal, JournalAdmin)
 admin.site.register(Response, ResponseAdmin)

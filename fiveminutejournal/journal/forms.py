@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import GoalCategory, Journal, Response
 from django.contrib.admin.widgets import AdminDateWidget
+from .models import JournalSettings
 
 
 class JournalForm(forms.Form):
@@ -72,3 +73,9 @@ class EditEntryForm(forms.Form):
         self.fields['additional_answer'] = forms.CharField(widget=forms.Textarea)
         self.fields['additional_answer'].label = 'Additional Reflection'
         self.fields['additional_answer'].initial = additional_answer.text
+
+
+class JournalSettingsForm(forms.ModelForm):
+    class Meta:
+        model = JournalSettings
+        fields = ['first_name', 'last_name', 'goals', 'events']

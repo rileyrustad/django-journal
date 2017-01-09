@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm
+from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -15,6 +15,7 @@ def index(request):
     last_journal = []
     response_exists = False
     responses = []
+    week_responses = []
 
     if request.user.is_authenticated:
         goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
@@ -225,6 +226,7 @@ def deleted_goals(request):
     }
     return render(request, 'deletedGoals.html', context)
 
+
 def edit_entry(request, response_id):
     response = Response.objects.filter(pk=response_id)[0]
     if request.method == 'POST':
@@ -250,3 +252,22 @@ def edit_entry(request, response_id):
         'form': form,
     }
     return render(request, 'editEntry.html', context)
+
+def journal_settings(request):
+    settings = User.objects.filter(pk=request.user.id)[0].journalsettings
+    journals = User.objects.filter(pk=request.user.id)[0].journal_set.all()
+    if request.method == 'POST':
+        new_settings = JournalSettingsForm(data=request.POST, instance=settings)
+        if new_settings.is_valid():
+            new_settings.save()
+        return HttpResponseRedirect('/journal/')
+
+    else:
+        form = JournalSettingsForm(instance=settings)
+
+    context = {
+        'journals': journals,
+        'form': form,
+    }
+    return render(request, 'journal_settings.html', context)
+

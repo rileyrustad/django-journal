@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+
+{% block content %}
+<p><a href="{% url 'journal:index' %}">back</a></p>
+<h1 class="text-center">Settings</h1>
+<form action="{% url 'journal:journal_settings' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+<h3>Edit Journals</h3>
+{% for journal in journals %}
+<p>{{ journal.name }} <a href="#"><span class="glyphicon glyphicon-pencil"></span></a></p>
+{% endfor %}
+
+
+
+{% endblock %}

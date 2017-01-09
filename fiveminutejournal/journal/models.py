@@ -93,6 +93,21 @@ class AdditionalAnswer(models.Model):
     def __str__(self):
         return self.text
 
+
+class JournalSettings(models.Model):
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    goals = models.BooleanField(default=True)
+    events = models.BooleanField(default=True)
+    user = models.OneToOneField(User)
+    #TODO: settings created for new user upon registration, right now, not automatic
+
+    def __str__(self):
+        return self.user.username
+
+
+
+
 # class GoalAnswer(models.Model):
 #     GREEN = 'G'
 #     YELLOW = 'Y'

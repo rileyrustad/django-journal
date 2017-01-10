@@ -5,9 +5,13 @@
 {% block journal %}class="active"{% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
-{% block goals %}
 <div class="container-fluid">
+    {% if settings.first_name %}
+    <h2 class="text-center">{{ settings.first_name }}'s Journal</h2>
+    {% else %}
     <h2 class="text-center">{{ user.username }}'s Journal</h2>
+    {% endif %}
+    {% if settings.goals %}
     {% if not week_responses %}
     <div class="alert alert-warning alert-dismissible fade in">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -15,6 +19,7 @@
             set new goals</a>?</p>
     </div>
     {% endif %}
+    {% block goals %}
     <div class="col-xs-12 col-sm-4">
         <h4 class="text-center">Weekly Goals</h4>
         <p class="text-center"><a href="{% url 'journal:completed_goals' %}">Change your goals</a></p>
@@ -35,69 +40,74 @@
     </div>
     {% endblock %}
     <div class="col-xs-8">
+        {% else %}
+        <div class="col-xs-12">
+            {% endif %}
+            {% if settings.events %}
+            {% block events %}
 
-        {% block events %}
-
-        <div>
-            <h2 class="text-center">Important Events</h2>
-            <ul>
-                {% for event in events %}
-                <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text}}
-                </li>
+            <div>
+                <h2 class="text-center">Important Events</h2>
+                <ul>
+                    {% for event in events %}
+                    <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit an
+                    Event</a></h5>
+            </div>
+            {% endblock %}
+            {% endif %}
+            <div>
+                {% block entries %}
+                {% if response_exists %}
+                {% for response in responses %}
+                <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>
+                <ul>
+                    {% for answer in response.answer_set.all %}
+                    <li><strong>{{answer.question}}</strong> {{answer.text}}</li>
+                    {% endfor %}
+                </ul>
+                {% for answer in response.additionalanswer_set.all %}
+                <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
                 {% endfor %}
-            </ul>
-            <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit an
-                Event</a></h5>
-        </div>
-        {% endblock %}
-        <div>
-            {% block entries %}
-            {% if response_exists %}
-            {% for response in responses %}
-            <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>
-            <ul>
-                {% for answer in response.answer_set.all %}
-                <li><strong>{{answer.question}}</strong> {{answer.text}}</li>
+                <h5><a href="{% url 'journal:edit_entry' response.id %}"><span class="glyphicon glyphicon-plus"></span>Edit
+                    Entry</a></h5>
+
                 {% endfor %}
-            </ul>
-            {% for answer in response.additionalanswer_set.all %}
-            <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
-            {% endfor %}
-            <h5><a href="{% url 'journal:edit_entry' response.id %}"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
+                {% endif %}
 
-            {% endfor %}
-            {% endif %}
+                {% endblock%}
+            </div>
+            {% block forms %}
+            <h4 class="text-center">Would you like to log a
+                {% if first_journal %}
+                {% for journal in first_journal %}
+                <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
+                {% endfor %}
+                {% endif %}
 
-            {% endblock%}
+                {% if middle_journals %}
+                {% for journal in middle_journals %}
+                <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
+                {% endfor %}
+                {% endif %}
+
+                {% if last_journal %}
+                {% for journal in last_journal %}
+                <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
+                {% endfor %}
+                {% endif %}
+
+                entry?</h4>
+            {% endblock %}
         </div>
-        {% block forms %}
-        <h4 class="text-center">Would you like to log a
-            {% if first_journal %}
-            {% for journal in first_journal %}
-            <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
-            {% endfor %}
-            {% endif %}
 
-            {% if middle_journals %}
-            {% for journal in middle_journals %}
-            <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
-            {% endfor %}
-            {% endif %}
 
-            {% if last_journal %}
-            {% for journal in last_journal %}
-            <a href="{% url 'journal:entry' journal.name %}">{{ journal.name }}</a>,
-            {% endfor %}
-            {% endif %}
-
-            entry?</h4>
-        {% endblock %}
     </div>
-
-
-</div>
-{% else %}
-<p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log
-    in</a> to make an entry?</p>
-{% endif %}
-{% endblock %}
+    {% else %}
+    <p class="text-center">Oops! Looks like you aren't logged in! Would you like to <a href="{% url 'account_login' %}">log
+        in</a> to make an entry?</p>
+    {% endif %}
+    {% endblock %}

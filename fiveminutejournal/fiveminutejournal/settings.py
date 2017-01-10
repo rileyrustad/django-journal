@@ -145,6 +145,7 @@ TIME_ZONE = 'America/Los_Angeles'
 ACCOUNT_UNIQUE_EMAIL = True
 
 LOGIN_REDIRECT_URL = "/journal/"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 # Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

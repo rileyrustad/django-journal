@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from .forms import GoalForm, EventForm, JournalForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm
-from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer
+from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer, JournalSettings
 from django.contrib.auth.models import User
 from datetime import datetime
 
@@ -16,6 +16,11 @@ def index(request):
     response_exists = False
     responses = []
     week_responses = []
+    try:
+        settings = User.objects.filter(pk=request.user.id)[0].journalsettings
+    except:
+        settings = JournalSettings(user=request.user)
+        settings.save()
 
     if request.user.is_authenticated:
         goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
@@ -40,6 +45,7 @@ def index(request):
         'middle_journals': middle_journals,
         'last_journal': last_journal,
         'week_responses': week_responses,
+        'settings': settings,
     }
     return render(request, 'index.html', context)
 

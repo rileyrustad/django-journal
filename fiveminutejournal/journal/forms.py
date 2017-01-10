@@ -5,10 +5,10 @@ from django.contrib.admin.widgets import AdminDateWidget
 from .models import JournalSettings
 
 
-class JournalForm(forms.Form):
+class EntryForm(forms.Form):
     def __init__(self, journal_name, *args, **kwargs):
         j = Journal.objects.filter(name=journal_name)[0]
-        super(JournalForm, self).__init__(*args, **kwargs)
+        super(EntryForm, self).__init__(*args, **kwargs)
         for question in j.question_set.all():
             for i in range(question.responses_number):
                 name = str(question.id) + ' question ' + question.text + ' ' + str(i)

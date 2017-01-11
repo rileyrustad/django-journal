@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, EntryForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm
+from .forms import GoalForm, EventForm, EntryForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm, JournalForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer, JournalSettings
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -284,6 +284,8 @@ def journal_settings(request):
 def edit_journal(request, journal_id):
     if journal_id == 'new':
         journal = Journal(user=request.user, name="New Journal")
+        journal.save()
+        return HttpResponseRedirect('/journal/settings/')
     else:
         journal = Journal.objects.get(pk=journal_id)
 
@@ -296,11 +298,31 @@ def edit_journal(request, journal_id):
     else:
         formset = QuestionInlineFormSet(instance=journal)
     new_journal = Journal.objects.count()
-    print(new_journal, 'blah')
     context = {
         'journal': journal,
         'formset': formset,
         'new_journal': new_journal,
     }
     return render(request, 'editJournal.html', context)
+
+
+def edit_journal_name(request, journal_id):
+    journal = User.objects.filter(pk=request.user.id)[0].journal_set.get(pk=journal_id)
+    if request.method == 'POST':
+        j = JournalForm(data=request.POST, instance=journal)
+        if j.is_valid():
+            j.save()
+        return HttpResponseRedirect('/journal/')
+
+    else:
+        form = JournalForm(instance=journal)
+    not_new = True
+    if journal_id == 'new':
+        not_new = False
+    context = {
+        'journal': journal,
+        'form': form,
+        'not_new': not_new
+    }
+    return render(request, 'editJournalName.html', context)
 

@@ -79,3 +79,9 @@ class JournalSettingsForm(forms.ModelForm):
     class Meta:
         model = JournalSettings
         fields = ['first_name', 'last_name', 'goals', 'events']
+
+
+class JournalForm(forms.ModelForm):
+    class Meta:
+        model = Journal
+        fields = ['name', 'journal_type']

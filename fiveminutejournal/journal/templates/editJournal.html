@@ -4,16 +4,19 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h1 class="text-center">Edit {{journal.name}} Journal</h1>
-    <p class="text-center"><a href="#">Edit Journal Title</a></p>
-
+    <h1 class="text-center">Edit "{{journal.name}}" Journal</h1>
+    {% if not_new %}
+    <p class="text-center"><a href="{% url 'journal:edit_journal_name' journal.id %}">Edit Journal Title</a></p>
+    {% endif %}
     <div class="row">
         <div class="col-xs-8 col-xs-offset-2">
             <form action="{% url 'journal:edit_journal' journal.id %}" method="post">
                 {% csrf_token %}
                 {{ formset.as_p }}
-                <input type="submit" value="Submit"/>
+                <input type="submit" class="btn btn-primary" value="Submit"/>
             </form>
+            <hr>
+            <p><a href="#"><span class="glyphicon glyphicon-remove"></span> Delete Journal</a></p>
         </div>
     </div>
 </div>

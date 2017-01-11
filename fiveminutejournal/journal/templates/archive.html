@@ -26,6 +26,7 @@
         <p><strong>Additional Reflection:</strong> {{answer.text}}</p>
         {% endfor %}
             <h5><a href="{% url 'journal:edit_entry' response.id %}"><span class="glyphicon glyphicon-plus"></span>Edit Entry</a></h5>
+            <h5><a href="{% url 'journal:delete_response' response.id %}"><span class="glyphicon glyphicon-remove"></span>Delete Entry</a></h5>
 
         {% endfor %}
 </div>

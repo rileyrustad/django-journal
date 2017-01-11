@@ -331,3 +331,8 @@ def delete_journal(request, journal_id):
     j = Journal.objects.get(pk=journal_id)
     j.delete()
     return HttpResponseRedirect('/journal/settings/')
+
+def delete_response(request, response_id):
+    r = Response.objects.get(pk=response_id)
+    r.delete()
+    return HttpResponseRedirect('/journal/archive/home/')

@@ -15,5 +15,5 @@ urlpatterns = [
     url(r'^settings/', views.journal_settings, name='journal_settings'),
     url(r'^edit_journal/(?P<journal_id>[\w]+)/$', views.edit_journal, name='edit_journal'),
     url(r'^edit_journal_name/(?P<journal_id>[\w]+)/$', views.edit_journal_name, name='edit_journal_name'),
-
+    url(r'^delete_journal/(?P<journal_id>[0-9]+)/$', views.delete_journal, name='delete_journal'),
 ]

@@ -326,3 +326,8 @@ def edit_journal_name(request, journal_id):
     }
     return render(request, 'editJournalName.html', context)
 
+
+def delete_journal(request, journal_id):
+    j = Journal.objects.get(pk=journal_id)
+    j.delete()
+    return HttpResponseRedirect('/journal/settings/')

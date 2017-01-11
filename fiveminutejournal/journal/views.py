@@ -5,6 +5,7 @@ from .forms import GoalForm, EventForm, EntryForm, ArchiveForm, CompletedGoalFor
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer, JournalSettings
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.forms import inlineformset_factory
 
 
 def index(request):
@@ -270,12 +271,36 @@ def journal_settings(request):
 
     else:
         form = JournalSettingsForm(instance=settings)
-
+    new_journal = Journal.objects.count()
+    print(new_journal, 'blah')
     context = {
         'journals': journals,
         'form': form,
+        'new_journal': new_journal,
     }
     return render(request, 'journal_settings.html', context)
 
 
+def edit_journal(request, journal_id):
+    if journal_id == 'new':
+        journal = Journal(user=request.user, name="New Journal")
+    else:
+        journal = Journal.objects.get(pk=journal_id)
+
+    QuestionInlineFormSet = inlineformset_factory(Journal, Question, fields=('text', 'responses_number'))
+    if request.method == "POST":
+        formset = QuestionInlineFormSet(request.POST, request.FILES, instance=journal)
+        if formset.is_valid():
+            formset.save()
+            return HttpResponseRedirect('/journal/')
+    else:
+        formset = QuestionInlineFormSet(instance=journal)
+    new_journal = Journal.objects.count()
+    print(new_journal, 'blah')
+    context = {
+        'journal': journal,
+        'formset': formset,
+        'new_journal': new_journal,
+    }
+    return render(request, 'editJournal.html', context)
 

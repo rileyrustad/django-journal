@@ -18,7 +18,7 @@ class Journal(models.Model):
         choices=JOURNAL_TYPE_CHOICES,
         default=MIDDLE,
     )
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, default='New')
     user = models.ForeignKey(User)
 
     def __str__(self):

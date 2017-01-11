@@ -12,8 +12,9 @@
 </form>
 <h3>Edit Journals</h3>
 {% for journal in journals %}
-<p>{{ journal.name }} <a href="#"><span class="glyphicon glyphicon-pencil"></span></a></p>
+<p>{{ journal.name }} <a href="{% url 'journal:edit_journal' journal.id %}"><span class="glyphicon glyphicon-pencil"></span> edit journal</a></p>
 {% endfor %}
+<p><a href="{% url 'journal:edit_journal' 'new' %}"><span class="glyphicon glyphicon-plus"></span> Create New Journal</a></p>
 
 
 

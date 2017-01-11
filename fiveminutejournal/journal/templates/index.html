@@ -63,7 +63,7 @@
                 {% block entries %}
                 {% if response_exists %}
                 {% for response in responses %}
-                <strong><h4 class="text-center">{{response.journal_type}}</h4></strong>
+                <strong><h4 class="text-center">{{ response.date }} {{response.journal_type}}</h4></strong>
                 <ul>
                     {% for answer in response.answer_set.all %}
                     <li><strong>{{answer.question}}</strong> {{answer.text}}</li>

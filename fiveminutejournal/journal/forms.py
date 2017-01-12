@@ -85,3 +85,9 @@ class JournalForm(forms.ModelForm):
     class Meta:
         model = Journal
         fields = ['name', 'journal_type']
+
+
+class GoalCategoryForm(forms.ModelForm):
+    class Meta:
+        model = GoalCategory
+        fields = ['text']

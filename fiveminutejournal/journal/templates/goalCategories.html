@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% load bootstrap %}
+
+
+    {% block forms %}
+<h1>Goal Categories</h1>
+
+<p><a href="{% url 'journal:index' %}">back</a></p>
+
+{% for category in categories %}
+    <p>{{ category.text }}<a href="{% url 'journal:edit_goal_cat' category.id %}"> <span class="glyphicon glyphicon-pencil"></span></a></p>
+{% endfor %}
+    <p><a href="{% url 'journal:edit_goal_cat' 'new' %}">Create New Goal Category <span class="glyphicon glyphicon-pencil"></span></a></p>
+
+    {% endblock %}

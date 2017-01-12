@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from .forms import GoalForm, EventForm, EntryForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm, JournalForm
+from .forms import GoalForm, EventForm, EntryForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm, JournalForm, GoalCategoryForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer, JournalSettings
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -148,7 +148,7 @@ def events(request):
         if form.is_valid():
             text = form.cleaned_data['text']
             date = form.cleaned_data['date']
-            e = Event(text=text, date=date)
+            e = Event(text=text, date=date, user=request.user)
             e.save()
             return HttpResponseRedirect('/journal/')
     else:
@@ -327,12 +327,62 @@ def edit_journal_name(request, journal_id):
     return render(request, 'editJournalName.html', context)
 
 
+def edit_goal_category(request, goal_cat_id):
+    if goal_cat_id == 'new':
+        g = GoalCategory(user=request.user, text="New Category (rename here --->)")
+        g.save()
+        return HttpResponseRedirect('/journal/goal_categories/')
+    goal_cat = User.objects.get(pk=request.user.id).goalcategory_set.get(pk=goal_cat_id)
+    if request.method == 'POST':
+        g = GoalCategoryForm(data=request.POST, instance=goal_cat)
+        if g.is_valid():
+            g.save()
+        return HttpResponseRedirect('/journal/')
+
+    else:
+        form = GoalCategoryForm(instance=goal_cat)
+    not_new = True
+    if goal_cat_id == 'new':
+        not_new = False
+    context = {
+        'goal_cat': goal_cat,
+        'form': form,
+        'not_new': not_new
+    }
+    return render(request, 'editGoalCat.html', context)
+
+
+def goal_categories(request):
+    categories = User.objects.get(pk=request.user.id).goalcategory_set.filter(active=True)
+    return render(request, 'goalCategories.html', {'categories':categories})
+
+
 def delete_journal(request, journal_id):
     j = Journal.objects.get(pk=journal_id)
     j.delete()
     return HttpResponseRedirect('/journal/settings/')
 
+
 def delete_response(request, response_id):
     r = Response.objects.get(pk=response_id)
     r.delete()
     return HttpResponseRedirect('/journal/archive/home/')
+
+
+def delete_goal(request, goal_id):
+    g = Goal.objects.get(pk=goal_id)
+    g.delete()
+    return HttpResponseRedirect('/journal/')
+
+
+def delete_event(request, event_id):
+    e = Event.objects.get(pk=event_id)
+    e.delete()
+    return HttpResponseRedirect('/journal/')
+
+
+def delete_goal_category(request, goal_cat_id):
+    g = GoalCategory.objects.get(pk=goal_cat_id)
+    g.delete()
+    return HttpResponseRedirect('/journal/goal_categories')
+

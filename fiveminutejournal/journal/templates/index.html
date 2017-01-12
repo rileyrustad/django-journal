@@ -29,7 +29,7 @@
             <ol class="text-center"><strong>{{ goal.text }}</strong><br>
                 {% for go in goal.goal_set.all %}<br>
                 {% if go.active %}
-                <li class="text-center">{{ go.text }}</li>
+                <li class="text-center">{{ go.text }} <a href="{% url 'journal:delete_goal' go.id %}"><span class="glyphicon glyphicon-remove"></span></a></li>
                 {% endif %}
                 {% endfor %}
             </ol>
@@ -51,6 +51,7 @@
                 <ul>
                     {% for event in events %}
                     <li><strong>{{ event.days_left }}</strong> days left until {{ event.date|date:"m/d" }} - {{ event.text }}
+                        <a href="{% url 'journal:delete_event' event.id %}"><span class="glyphicon glyphicon-remove"></span></a>
                     </li>
                     {% endfor %}
                 </ul>

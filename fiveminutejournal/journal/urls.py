@@ -15,6 +15,11 @@ urlpatterns = [
     url(r'^settings/', views.journal_settings, name='journal_settings'),
     url(r'^edit_journal/(?P<journal_id>[\w]+)/$', views.edit_journal, name='edit_journal'),
     url(r'^edit_journal_name/(?P<journal_id>[\w]+)/$', views.edit_journal_name, name='edit_journal_name'),
+    url(r'^edit_goal_cat/(?P<goal_cat_id>[\w]+)/$', views.edit_goal_category, name='edit_goal_cat'),
+    url(r'^goal_categories/$', views.goal_categories, name='goal_categories'),
     url(r'^delete_journal/(?P<journal_id>[0-9]+)/$', views.delete_journal, name='delete_journal'),
     url(r'^delete_response/(?P<response_id>[0-9]+)/$', views.delete_response, name='delete_response'),
+    url(r'^delete_goal/(?P<goal_id>[0-9]+)/$', views.delete_goal, name='delete_goal'),
+    url(r'^delete_event/(?P<event_id>[0-9]+)/$', views.delete_event, name='delete_event'),
+    url(r'^delete_goal_cat/(?P<goal_cat_id>[0-9]+)/$', views.delete_goal_category, name='delete_goal_category'),
 ]

@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+{% load bootstrap %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="text-center">Edit Goal Category</h1>
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <form action="{% url 'journal:edit_goal_cat' goal_cat.id %}" method="post">
+                {% csrf_token %}
+                {{ form|bootstrap }}
+                <input type="submit" class="btn btn-primary" value="Submit"/>
+            </form>
+            <p><a href="{% url 'journal:delete_goal_category' goal_cat.id %}"><span class="glyphicon glyphicon-remove"></a> Delete Goal Category</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

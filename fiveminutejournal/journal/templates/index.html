@@ -102,6 +102,9 @@
                 {% endif %}
 
                 entry?</h4>
+            {% if journals_default %}
+            <p>I see that you don't have any journals yet, would you like to <a href="{% url 'journal:journal_defaults' %}">populate them with defaults</a> from the five minute journal?</p>
+            {% endif %}
             {% endblock %}
         </div>
 

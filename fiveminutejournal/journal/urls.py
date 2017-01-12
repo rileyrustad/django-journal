@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^delete_goal/(?P<goal_id>[0-9]+)/$', views.delete_goal, name='delete_goal'),
     url(r'^delete_event/(?P<event_id>[0-9]+)/$', views.delete_event, name='delete_event'),
     url(r'^delete_goal_cat/(?P<goal_cat_id>[0-9]+)/$', views.delete_goal_category, name='delete_goal_category'),
+    url(r'^journal_defaults/', views.journal_defaults, name='journal_defaults'),
 ]

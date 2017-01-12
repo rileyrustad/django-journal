@@ -17,6 +17,9 @@ def index(request):
     response_exists = False
     responses = []
     week_responses = []
+    goals_default = False
+    events_default = False
+    journals_defualt = False
     try:
         settings = User.objects.filter(pk=request.user.id)[0].journalsettings
     except:
@@ -32,6 +35,15 @@ def index(request):
         responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.datetime.now().date())
         today = timezone.now()
         week_responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=timezone.now() - timezone.timedelta(days=today.weekday()))
+        journals = User.objects.get(pk=request.user.id).journal_set.all()
+
+    if len(goals) == 0:
+        goals_default = True
+    if len(events) == 0:
+        events_default = True
+    if len(journals) == 0:
+        journals_defualt = True
+
 
     if len(responses) > 0:
         response_exists = True
@@ -47,6 +59,10 @@ def index(request):
         'last_journal': last_journal,
         'week_responses': week_responses,
         'settings': settings,
+        'goals_default': goals_default,
+        'events_default': events_default,
+        'journals_default': journals_defualt,
+
     }
     return render(request, 'index.html', context)
 
@@ -382,3 +398,17 @@ def delete_goal_category(request, goal_cat_id):
     g.delete()
     return HttpResponseRedirect('/journal/goal_categories')
 
+
+def journal_defaults(request):
+    user = User.objects.get(pk=request.user.id)
+    morning = Journal(user=user, journal_type='F', name='Morning')
+    morning.save()
+    q1 = Question(text='I am grateful for...', journal=morning, responses_number=3).save()
+    q2 = Question(text='What would make today great?', journal=morning, responses_number=3).save()
+    q3 = Question(text='Daily affirmations. I am...', journal=morning, responses_number=2).save()
+
+    evening = Journal(user=user, journal_type='L', name='Evening')
+    evening.save()
+    q4 = Question(text='3 amazing things that happened today...', journal=evening, responses_number=3).save()
+    q5 = Question(text='How could I have made today better?', journal=morning, responses_number=2).save()
+    return HttpResponseRedirect('/journal/')

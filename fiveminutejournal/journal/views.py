@@ -341,13 +341,9 @@ def edit_goal_category(request, goal_cat_id):
 
     else:
         form = GoalCategoryForm(instance=goal_cat)
-    not_new = True
-    if goal_cat_id == 'new':
-        not_new = False
     context = {
         'goal_cat': goal_cat,
         'form': form,
-        'not_new': not_new
     }
     return render(request, 'editGoalCat.html', context)
 

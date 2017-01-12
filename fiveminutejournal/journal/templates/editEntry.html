@@ -10,10 +10,9 @@
         <div class="col-xs-8 col-xs-offset-2">
             <form action="{% url 'journal:edit_entry' response.id %}" method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Submit"/>
+                {{ form|bootstrap }}
+                <input type="submit" class="btn btn-primary" value="Submit"/>
             </form>
-            <p><a href="{% url 'journal:deleted_goals' %}">Deleted Goals</a></p>
         </div>
     </div>
 </div>

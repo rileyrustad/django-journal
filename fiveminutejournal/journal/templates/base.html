@@ -40,7 +40,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
-        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+        <li><a href="{% url 'account_change_password' %}"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
         <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
         {% else %}
         <li><a href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

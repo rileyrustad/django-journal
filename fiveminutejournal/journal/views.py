@@ -138,7 +138,7 @@ def goals(request):
     goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
     events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
     if request.method == 'POST':
-        form = GoalForm(data=request.POST, user=request.user)
+        form = GoalForm(data=request.POST)
         if form.is_valid():
             text = form.cleaned_data['new_goal_text']
             category = form.cleaned_data['category']
@@ -146,7 +146,7 @@ def goals(request):
             g.save()
             return HttpResponseRedirect('/journal/')
     else:
-        form = GoalForm(user=request.user)
+        form = GoalForm()
     context = {
         'form': form,
         'events': events,

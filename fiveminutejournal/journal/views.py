@@ -138,7 +138,7 @@ def goals(request):
     goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
     events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
     if request.method == 'POST':
-        form = GoalForm(request.POST)
+        form = GoalForm(data=request.POST, user=request.user)
         if form.is_valid():
             text = form.cleaned_data['new_goal_text']
             category = form.cleaned_data['category']
@@ -146,7 +146,7 @@ def goals(request):
             g.save()
             return HttpResponseRedirect('/journal/')
     else:
-        form = GoalForm()
+        form = GoalForm(user=request.user)
     context = {
         'form': form,
         'events': events,
@@ -412,3 +412,39 @@ def journal_defaults(request):
     q4 = Question(text='3 amazing things that happened today...', journal=evening, responses_number=3).save()
     q5 = Question(text='How could I have made today better?', journal=morning, responses_number=2).save()
     return HttpResponseRedirect('/journal/')
+
+
+def goal_defaults(request):
+    user = User.objects.get(pk=request.user.id)
+    ff = GoalCategory(user=user, text='Family/Friend Goals')
+    ff.save()
+    Goal(category=ff, text="Call a Friend that you haven't spoken to in over a year").save()
+    health = GoalCategory(user=user, text='Health Goals')
+    health.save()
+    Goal(category=health, text="Go to the gym 3 times this week").save()
+    edu = GoalCategory(user=user, text='Educational Goals')
+    edu.save()
+    Goal(category=edu, text="Learn to cook something you've never made before").save()
+    work = GoalCategory(user=user, text='Professional Goals')
+    work.save()
+    Goal(category=work, text="Each day this week start with the most important task").save()
+    return HttpResponseRedirect('/journal/')
+
+
+def event_defaults(request):
+    today = timezone.now().date()
+    year = today.year
+    fourth = timezone.datetime(year, 7, 4).date()
+    xmas = timezone.datetime(year, 12, 25).date()
+    if today > fourth:
+        fourth = timezone.datetime(year+1, 7, 4).date()
+    if today > xmas:
+        xmas = timezone.datetime(year+1, 7, 4).date()
+    Event(text='Independence Day', date=timezone.datetime(2017, 7, 4), user=request.user).save()
+    Event(text='Christmas Day', date=timezone.datetime(2017, 12, 25), user=request.user).save()
+    #TODO: Add all US holidays, even the ones that have varying dates.
+
+
+    return HttpResponseRedirect('/journal/')
+
+

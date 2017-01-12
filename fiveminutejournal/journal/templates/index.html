@@ -22,13 +22,14 @@
     {% block goals %}
     <div class="col-xs-12 col-sm-4">
         <h4 class="text-center">Weekly Goals</h4>
-        <p class="text-center"><a href="{% url 'journal:completed_goals' %}">Change your goals</a></p>
+        <p class="text-center"><a href="{% url 'journal:completed_goals' %}">Update Finished Goals</a></p>
         {% for goal in goals %}
         {% if goal.active %}
         <div class="well well-sm">
             <ol class="text-center"><strong>{{ goal.text }}</strong><br>
-                {% for go in goal.goal_set.all %}<br>
+                {% for go in goal.goal_set.all %}
                 {% if go.active %}
+                <br>
                 <li class="text-center">{{ go.text }} <a href="{% url 'journal:delete_goal' go.id %}"><span class="glyphicon glyphicon-remove"></span></a></li>
                 {% endif %}
                 {% endfor %}
@@ -37,6 +38,11 @@
         {% endif %}
         {% endfor %}
         <h5><a href="{% url 'journal:goals' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit a Goal</a></h5>
+        {% if goals_default %}
+            <p>I see that you don't have any goals yet. Would you like to
+                <a href="{% url 'journal:goal_defaults' %}">populate them with defaults</a>? You'll always have the
+                option to create/edit your own by clicking "Add/Edit a Goal > Edit Goal Categories".</p>
+        {% endif %}
     </div>
     {% endblock %}
     <div class="col-xs-8">
@@ -55,8 +61,13 @@
                     </li>
                     {% endfor %}
                 </ul>
-                <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add/Edit an
+                <h5><a href="{% url 'journal:events' %}"><span class="glyphicon glyphicon-plus"></span>Add an
                     Event</a></h5>
+                        {% if events_default %}
+            <p>I see that you don't have any events yet. Would you like to
+                <a href="{% url 'journal:event_defaults' %}">populate them with defaults</a>? You'll always have the
+                option to create/edit your own by clicking "Add/Edit an Event".</p>
+        {% endif %}
             </div>
             {% endblock %}
             {% endif %}
@@ -78,7 +89,6 @@
 
                 {% endfor %}
                 {% endif %}
-
                 {% endblock%}
             </div>
             {% block forms %}
@@ -103,7 +113,10 @@
 
                 entry?</h4>
             {% if journals_default %}
-            <p>I see that you don't have any journals yet, would you like to <a href="{% url 'journal:journal_defaults' %}">populate them with defaults</a> from the five minute journal?</p>
+            <p>I see that you don't have any journals yet. Would you like to
+                <a href="{% url 'journal:journal_defaults' %}">populate them with defaults</a> from the five minute
+                journal? You'll always have the option to create/edit your own by clicking "Journal > Journal Settings"
+                above.</p>
             {% endif %}
             {% endblock %}
         </div>

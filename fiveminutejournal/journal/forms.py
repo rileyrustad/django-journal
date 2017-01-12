@@ -47,6 +47,7 @@ class CompletedGoalForm(forms.Form):
                     self.fields[str(goal.id)].label = goal.text
                     self.fields[str(goal.id)].required = False
 
+
 class DeletedGoalForm(forms.Form):
     def __init__(self, journal_user, *args, **kwargs):
         goal_cats = journal_user.goalcategory_set.all()
@@ -57,6 +58,7 @@ class DeletedGoalForm(forms.Form):
                     self.fields[str(goal.id)] = forms.BooleanField()
                     self.fields[str(goal.id)].label = goal.text
                     self.fields[str(goal.id)].required = False
+
 
 class EditEntryForm(forms.Form):
     def __init__(self, response_id, *args, **kwargs):

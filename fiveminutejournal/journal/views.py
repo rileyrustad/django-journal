@@ -20,11 +20,11 @@ def index(request):
     goals_default = False
     events_default = False
     journals_defualt = False
-    try:
-        settings = User.objects.filter(pk=request.user.id)[0].journalsettings
-    except:
-        settings = JournalSettings(user=request.user)
-        settings.save()
+    journals = []
+    settings = []
+
+    # settings = JournalSettings(user=request.user)
+    # settings.save()
 
     if request.user.is_authenticated:
         goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
@@ -36,6 +36,7 @@ def index(request):
         today = timezone.now()
         week_responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=timezone.now() - timezone.timedelta(days=today.weekday()))
         journals = User.objects.get(pk=request.user.id).journal_set.all()
+        settings = User.objects.filter(pk=request.user.id)[0].journalsettings
 
     if len(goals) == 0:
         goals_default = True

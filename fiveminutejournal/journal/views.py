@@ -1,5 +1,5 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from .forms import GoalForm, EventForm, EntryForm, ArchiveForm, CompletedGoalForm, DeletedGoalForm, EditEntryForm, JournalSettingsForm, JournalForm, GoalCategoryForm
 from .models import GoalCategory, Goal, Journal, Event, Answer, Response, Question, AdditionalAnswer, JournalSettings
@@ -27,16 +27,16 @@ def index(request):
     # settings.save()
 
     if request.user.is_authenticated:
-        goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-        events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.datetime.now()).order_by('date')
-        first_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='F').exclude(response__date=timezone.datetime.now().date())
-        middle_journals = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='M').exclude(response__date=timezone.datetime.now().date())
-        last_journal = User.objects.filter(pk=request.user.id)[0].journal_set.filter(journal_type='L').exclude(response__date=timezone.datetime.now().date())
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date=timezone.datetime.now().date())
+        goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
+        events = User.objects.get(pk=request.user.id).event_set.filter(date__gte=timezone.now()).order_by('date')
+        first_journal = User.objects.get(pk=request.user.id).journal_set.filter(journal_type='F').exclude(response__date=timezone.now().date())
+        middle_journals = User.objects.get(pk=request.user.id).journal_set.filter(journal_type='M').exclude(response__date=timezone.now().date())
+        last_journal = User.objects.get(pk=request.user.id).journal_set.filter(journal_type='L').exclude(response__date=timezone.now().date())
+        responses = User.objects.get(pk=request.user.id).response_set.filter(date=timezone.now().date())
         today = timezone.now()
-        week_responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=timezone.now() - timezone.timedelta(days=today.weekday()))
+        week_responses = User.objects.get(pk=request.user.id).response_set.filter(date__gte=timezone.now() - timezone.timedelta(days=today.weekday()))
         journals = User.objects.get(pk=request.user.id).journal_set.all()
-        settings = User.objects.filter(pk=request.user.id)[0].journalsettings
+        settings = User.objects.get(pk=request.user.id).journalsettings
 
     if len(goals) == 0:
         goals_default = True
@@ -69,8 +69,8 @@ def index(request):
 
 
 def complete(request):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
+    events = User.objects.get(pk=request.user.id).event_set.filter(date__gte=timezone.now()).order_by('date')
     context = {
         'goals': goals,
         'events': events,
@@ -79,8 +79,8 @@ def complete(request):
 
 
 def entry(request, journal_name):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
+    events = User.objects.get(pk=request.user.id).event_set.filter(date__gte=timezone.now()).order_by('date')
     name = ''
     entry_type_first = False
     entry_type_middle = False
@@ -105,7 +105,7 @@ def entry(request, journal_name):
             for answer in form.cleaned_data:
                 if 'question' in answer:
                     id = [int(s) for s in answer.split() if s.isdigit()][0]
-                    q = Question.objects.filter(id=id)[0]
+                    q = Question.objects.get(id=id)
                     a = Answer(text=form.cleaned_data[answer], response=response, question=q)
                     a.save()
                 if 'additional_answer' in answer:
@@ -136,8 +136,8 @@ def entry(request, journal_name):
 
 
 def goals(request):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
+    events = User.objects.get(pk=request.user.id).event_set.filter(date__gte=timezone.now()).order_by('date')
     if request.method == 'POST':
         form = GoalForm(data=request.POST)
         if form.is_valid():
@@ -157,8 +157,8 @@ def goals(request):
 
 
 def events(request):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
-    events = User.objects.filter(pk=request.user.id)[0].event_set.filter(date__gte=timezone.now()).order_by('date')
+    goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
+    events = User.objects.get(pk=request.user.id).event_set.filter(date__gte=timezone.now()).order_by('date')
 
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -194,25 +194,25 @@ def archive(request, start_date):
     if start_date == 'home':
         return render(request, 'archive.html', context)
     elif start_date == 'all':
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.all().order_by('-date')
+        responses = User.objects.get(pk=request.user.id).response_set.all().order_by('-date')
         context['responses'] = responses
         return render(request, 'archive.html', context)
     else:
         start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-        responses = User.objects.filter(pk=request.user.id)[0].response_set.filter(date__gte=start_date).order_by('-date')
+        responses = User.objects.get(pk=request.user.id).response_set.filter(date__gte=start_date).order_by('-date')
         context['responses'] = responses
         return render(request, 'archive.html', context)
 
 
 def completed_goals(request):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
 
     if request.method == 'POST':
         form = CompletedGoalForm(journal_user=request.user, data=request.POST)
         if form.is_valid():
             for answer in form.cleaned_data:
                 if form.cleaned_data[answer]:
-                    goal = Goal.objects.filter(id=int(answer))[0]
+                    goal = Goal.objects.get(id=int(answer))
                     goal.active = False
                     goal.save()
             return HttpResponseRedirect('/journal/')
@@ -230,14 +230,14 @@ def completed_goals(request):
 
 
 def deleted_goals(request):
-    goals = User.objects.filter(pk=request.user.id)[0].goalcategory_set.all()
+    goals = User.objects.get(pk=request.user.id).goalcategory_set.all()
 
     if request.method == 'POST':
         form = DeletedGoalForm(journal_user=request.user, data=request.POST)
         if form.is_valid():
             for answer in form.cleaned_data:
                 if form.cleaned_data[answer]:
-                    goal = Goal.objects.filter(id=int(answer))[0]
+                    goal = Goal.objects.get(id=int(answer))
                     goal.active = True
                     goal.save()
             return HttpResponseRedirect('/journal/')
@@ -252,7 +252,7 @@ def deleted_goals(request):
 
 
 def edit_entry(request, response_id):
-    response = Response.objects.filter(pk=response_id)[0]
+    response = get_object_or_404(Response, pk=response_id)
     if request.method == 'POST':
         form = EditEntryForm(response_id=response_id, data=request.POST)
         if form.is_valid():
@@ -262,11 +262,9 @@ def edit_entry(request, response_id):
                     additional_answer.text = form.cleaned_data[answer]
                     additional_answer.save()
                 else:
-                    revised_answer = Answer.objects.filter(pk=int(answer))[0]
+                    revised_answer = Answer.objects.get(pk=int(answer))
                     revised_answer.text = form.cleaned_data[answer]
                     revised_answer.save()
-
-
             return HttpResponseRedirect('/journal/')
 
     else:
@@ -277,9 +275,10 @@ def edit_entry(request, response_id):
     }
     return render(request, 'editEntry.html', context)
 
+
 def journal_settings(request):
-    settings = User.objects.filter(pk=request.user.id)[0].journalsettings
-    journals = User.objects.filter(pk=request.user.id)[0].journal_set.all()
+    settings = User.objects.get(pk=request.user.id).journalsettings
+    journals = User.objects.get(pk=request.user.id).journal_set.all()
     if request.method == 'POST':
         new_settings = JournalSettingsForm(data=request.POST, instance=settings)
         if new_settings.is_valid():
@@ -324,7 +323,7 @@ def edit_journal(request, journal_id):
 
 
 def edit_journal_name(request, journal_id):
-    journal = User.objects.filter(pk=request.user.id)[0].journal_set.get(pk=journal_id)
+    journal = User.objects.get(pk=request.user.id).journal_set.get(pk=journal_id)
     if request.method == 'POST':
         j = JournalForm(data=request.POST, instance=journal)
         if j.is_valid():

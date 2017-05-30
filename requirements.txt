@@ -1,9 +1,15 @@
+appdirs==1.4.3
 defusedxml==0.4.1
 Django==1.10.2
 django-allauth==0.28.0
 django-bootstrap-form==3.2.1
 django-bootstrap3==7.1.0
 oauthlib==2.0.0
+packaging==16.8
+psycopg2==2.7.1
+pyparsing==2.2.0
 python3-openid==3.0.10
 requests==2.11.1
 requests-oauthlib==0.7.0
+six==1.10.0
+whitenoise==3.3.0
